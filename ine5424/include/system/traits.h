@@ -19,7 +19,7 @@ struct Traits
     enum {eMote1, eMote2, STK500, RCX, Cortex_A, Cortex_M, Cortex_R, PC, Leon, Virtex};
 
     // Machine models
-    enum {Unique, Legacy_PC, eMote3, LM3S811, Realview_PBX_a9, Zynq};
+    enum {Unique, Legacy_PC, eMote3, LM3S811, Realview_PBX, Zynq};
 
     // Serial display engines
     enum {UART, USB};
@@ -46,9 +46,9 @@ struct Traits
 template<> struct Traits<Build>: public Traits<void>
 {
     static const unsigned int MODE = LIBRARY;
-    static const unsigned int ARCHITECTURE = ARMv7;
-    static const unsigned int MACHINE = Cortex_A;
-    static const unsigned int MODEL = Realview_PBX_a9;
+    static const unsigned int ARCHITECTURE = IA32;
+    static const unsigned int MACHINE = PC;
+    static const unsigned int MODEL = Legacy_PC;
     static const unsigned int CPUS = 1;
     static const unsigned int NODES = 1; // > 1 => NETWORKING
 };

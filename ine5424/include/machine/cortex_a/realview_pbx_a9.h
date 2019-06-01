@@ -78,9 +78,9 @@ public:
         RTC_BASE                    = 0x10017000, // rtc
         FLASH0_BASE                 = 0x18000300, // Flash Controller (pode ser tambem a 0x1000004C)
         FLASHCFG_BASE               = 0x4c000000, // Flash CONFIGURATION
-        SCR_BASE0                   = 0x10001000, // System Control (pode ser tambem 0x1001A000)
-        SCR_BASE1                   = 0x1001A000, // System Control (pode ser tambem 0x1001A000)
-        PER_BASE                    = 0x1f000000, // peripheral base
+        SCR_BASE0                   = 0x10001000, // System Control
+        SCR_BASE1                   = 0x1001A000, // System Control
+        ASIC_BASE                   = 0x1f000000, // Peripheral base
     };
 
     // Offsets para PER_BASE
@@ -407,7 +407,7 @@ public:
     };
 
 protected:
-    Realview_PBX() {}
+    Realview_PBX_a9() {}
 
     static void reboot() {
         Reg32 val = scs(AIRCR) & (~((-1u / VECTKEY) * VECTKEY));
@@ -524,10 +524,12 @@ protected:
     static void power_ieee802_15_4(const Power_Mode & mode);
 
 public:
-    static volatile Reg32 & scr(unsigned int o) { return reinterpret_cast<volatile Reg32 *>(SCR_BASE)[o / sizeof(Reg32)]; }
-    static volatile Reg32 & scs(unsigned int o) { return reinterpret_cast<volatile Reg32 *>(IC0_BASE)[o / sizeof(Reg32)]; }
+    static volatile Reg32 & scr(unsigned int o) { return reinterpret_cast<volatile Reg32 *>(SYSREG_BASE)[o / sizeof(Reg32)]; }
+    static volatile Reg32 & scr0(unsigned int o) { return reinterpret_cast<volatile Reg32 *>(SCR_BASE0)[o / sizeof(Reg32)]; }
+    static volatile Reg32 & scr1(unsigned int o) { return reinterpret_cast<volatile Reg32 *>(SCR_BASE1)[o / sizeof(Reg32)]; }
+    static volatile Reg32 & scs(unsigned int o) { return reinterpret_cast<volatile Reg32 *>(ASIC_BASE)[o / sizeof(Reg32)]; }
 
-    static volatile Reg32 & systick(unsigned int o) { return reinterpret_cast<volatile Reg32 *>(PER_BASE + GTIOFF)[o / sizeof(Reg32)]; }
+    static volatile Reg32 & systick(unsigned int o) { return reinterpret_cast<volatile Reg32 *>(ASIC_BASE + GTIOFF)[o / sizeof(Reg32)]; }
     static volatile Reg32 & tsc(unsigned int o)     { return reinterpret_cast<volatile Reg32 *>(TIMER1_BASE)[o / sizeof(Reg32)]; }
     static volatile Reg32 & timer0(unsigned int o)  { return reinterpret_cast<volatile Reg32 *>(TIMER0_BASE)[o / sizeof(Reg32)]; }
     static volatile Reg32 & timer1(unsigned int o)  { return reinterpret_cast<volatile Reg32 *>(TIMER2_BASE)[o / sizeof(Reg32)]; }
@@ -543,7 +545,7 @@ protected:
     static void init();
 };
 
-typedef Realview_PBX Machine_Model;
+typedef Realview_PBX_a9 Machine_Model;
 
 __END_SYS
 

@@ -46,9 +46,9 @@ struct Traits
 template<> struct Traits<Build>: public Traits<void>
 {
     static const unsigned int MODE = LIBRARY;
-    static const unsigned int ARCHITECTURE = IA32;
-    static const unsigned int MACHINE = PC;
-    static const unsigned int MODEL = Legacy_PC;
+    static const unsigned int ARCHITECTURE = ARMv7;
+    static const unsigned int MACHINE = Cortex_A;
+    static const unsigned int MODEL = Realview_PBX;
     static const unsigned int CPUS = 1;
     static const unsigned int NODES = 1; // > 1 => NETWORKING
 };
@@ -134,6 +134,7 @@ template<> struct Traits<System>: public Traits<void>
     static const unsigned int mode = Traits<Build>::MODE;
     static const bool multithread = (Traits<Application>::MAX_THREADS > 1);
     static const bool multiheap = true;
+    static const bool multicore = false;
 
     static const unsigned long LIFE_SPAN = 1 * YEAR; // s
 

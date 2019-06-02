@@ -1,6 +1,7 @@
 // EPOS Realview_PBX (ARM Cortex) MCU Initialization
 
 #include <machine/main.h>
+#include <machine/cortex_a/ic.h>
 
 #ifdef __mmod_realview_pbx__
 

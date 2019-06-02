@@ -5,7 +5,7 @@
 #include <machine/timer.h>
 #include <machine/usb.h>
 #include <machine/gpio.h>
-#include <machine/nic.h>
+//#include <machine/nic.h>
 
 __BEGIN_SYS
 
@@ -51,6 +51,7 @@ IC::Interrupt_Handler IC::_eoi_vector[INTS] = {
     0,
     0,
     0,
+    0, //40
     0,
     0,
     0,
@@ -60,6 +61,7 @@ IC::Interrupt_Handler IC::_eoi_vector[INTS] = {
     0,
     0,
     0,
+    0, //50
     0,
     0,
     0,
@@ -69,41 +71,10 @@ IC::Interrupt_Handler IC::_eoi_vector[INTS] = {
     0,
     0,
     0,
+    0, //60
     0,
     0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
+    0 //64
 };
 
 

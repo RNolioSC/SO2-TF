@@ -12,6 +12,9 @@ extern "C" { void _prefetch_abort() __attribute__ ((alias("_ZN4EPOS1S2IC14prefet
 extern "C" { void _data_abort() __attribute__ ((alias("_ZN4EPOS1S2IC10data_abortEv"))); }
 extern "C" { void _reserved() __attribute__ ((alias("_ZN4EPOS1S2IC8reservedEv"))); }
 extern "C" { void _fiq() __attribute__ ((alias("_ZN4EPOS1S2IC3fiqEv"))); }
+extern "C" { void _irq() __attribute__ ((alias("_ZN4EPOS1S2IC3fiqEv"))); }
+extern "C" { void _reset() __attribute__ ((alias("_ZN4EPOS1S2IC3entryEv"))); }
+
 
 __BEGIN_SYS
 
@@ -54,6 +57,8 @@ void IC::entry()
         // irq_spsr to be restored into svc_cpsr
         "ldmfd sp!, {r0-r3, r12, lr, pc}^           \n" : : "i"(dispatch));
 }
+
+void IC::reset() {}
 
 void IC::int_not(const Interrupt_Id & i)
 {
@@ -100,6 +105,24 @@ void IC::fiq()
 {
     db<IC>(ERR) << "FIQ handler" << endl;
     Machine::panic();
+}
+
+void IC::dispatch(unsigned int id)
+{
+    if((id != INT_TIMER) || Traits<IC>::hysterically_debugged)
+        db<IC>(TRC) << "IC::dispatch(i=" << id << ")" << endl;
+
+    _int_vector[id](id);
+}
+
+void IC::eoi(unsigned int id)
+{
+    if((id != INT_TIMER) || Traits<IC>::hysterically_debugged)
+        db<IC>(TRC) << "IC::eoi(i=" << id << ")" << endl;
+
+    assert(id < INTS);
+    if(_eoi_vector[id])
+        _eoi_vector[id](id);
 }
 
 __END_SYS

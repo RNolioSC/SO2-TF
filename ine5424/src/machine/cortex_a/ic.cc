@@ -12,8 +12,8 @@ extern "C" { void _prefetch_abort() __attribute__ ((alias("_ZN4EPOS1S2IC14prefet
 extern "C" { void _data_abort() __attribute__ ((alias("_ZN4EPOS1S2IC10data_abortEv"))); }
 extern "C" { void _reserved() __attribute__ ((alias("_ZN4EPOS1S2IC8reservedEv"))); }
 extern "C" { void _fiq() __attribute__ ((alias("_ZN4EPOS1S2IC3fiqEv"))); }
-extern "C" { void _irq() __attribute__ ((alias("_ZN4EPOS1S2IC3fiqEv"))); }
-extern "C" { void _reset() __attribute__ ((alias("_ZN4EPOS1S2IC3entryEv"))); }
+//extern "C" { void _irq() __attribute__ ((alias("_ZN4EPOS1S2IC3irqEv"))); }
+//extern "C" { void _reset() __attribute__ ((alias("_ZN4EPOS1S2IC3resetEv"))); }
 
 
 __BEGIN_SYS

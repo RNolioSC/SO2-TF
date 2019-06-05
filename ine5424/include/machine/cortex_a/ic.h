@@ -7,6 +7,8 @@
 #include <machine/ic.h>
 #include __MODEL_H
 
+//TODO: fazer isso
+
 __BEGIN_SYS
 
 class GIC: public IC_Common, protected Machine_Model

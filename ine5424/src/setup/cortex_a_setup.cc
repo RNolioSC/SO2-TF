@@ -17,4 +17,9 @@ void _vector_table()
         b   _irq                                                             \t\n\
         b   _fiq                                                             \t\n\
         ");
+    //TODO: botar seminarios aqui
+    //TODO: _reset e b _start
+
 }
+
+

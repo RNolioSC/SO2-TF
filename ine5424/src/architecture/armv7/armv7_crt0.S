@@ -1,4 +1,6 @@
 // EPOS ARMv7 Program Starter
+        
+        //TODO: 
 
         .file "armv7_crt0.S"
 
@@ -21,6 +23,8 @@ _start:
         add     r1, #4
         cmp     r1, r2
         blt     .L1
+
+        //TODO: se nao der certo, botar seminarios aqui
 
         // Call _init
         bl      _init

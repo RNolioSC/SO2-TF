@@ -6,7 +6,7 @@
 #=========================================================================
 # PATHS
 #=========================================================================
-EPOS=/home/raul/Desktop/entrega1/SO2-TF/ine5424
+EPOS=/home/raul/Desktop/tf-so2-master/SO2-TF/ine5424
 TMP=/tmp
 INC=$EPOS/include
 SRC=$EPOS/src

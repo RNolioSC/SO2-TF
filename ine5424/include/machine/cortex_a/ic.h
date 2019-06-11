@@ -7,8 +7,6 @@
 #include <machine/ic.h>
 #include __MODEL_H
 
-//TODO: fazer isso
-
 __BEGIN_SYS
 
 class GIC: public IC_Common, protected Machine_Model
@@ -18,133 +16,120 @@ public:
     static const unsigned int IRQS = Machine_Model::IRQS;
     typedef Interrupt_Id IRQ;
     enum {
-        IRQ_GPIOA       = 0,
-        IRQ_GPIOB       = 1,
-        IRQ_GPIOC       = 2,
-        IRQ_GPIOD       = 3,
-        IRQ_GPIOE       = 4,
-        IRQ_UART0       = 5,
-        IRQ_UART1       = 6,
-        IRQ_SSI0        = 7,
-        IRQ_I2C         = 8,
-        IRQ_ADC         = 14,
-        IRQ_WATCHDOG    = 18,
-        IRQ_GPT0A       = 19,
-        IRQ_GPT0B       = 20,
-        IRQ_GPT1A       = 21,
-        IRQ_GPT1B       = 22,
-        IRQ_GPT2A       = 23,
-        IRQ_GPT2B       = 24,
-        IRQ_AC          = 25,
-        IRQ_RFTXRX      = 26,
-        IRQ_RFERR       = 27,
-        IRQ_SC          = 28,
-        IRQ_FC          = 29,
-        IRQ_AES         = 30,
-        IRQ_PKA         = 31,
-        IRQ_SMT         = 32,
-        IRQ_MACTIMER    = 33,
-        IRQ_SSI1        = 34,
-        IRQ_GPT3A       = 35,
-        IRQ_GPT3B       = 36,
-        IRQ_USB         = 44, // Using alternate interrupt mapping
-        IRQ_UDMASW      = 46,
-        IRQ_UDMAERR     = 47,
-        IRQ_LAST        = IRQ_UDMAERR
+        IRQ_SOFTWARE0           = 0,
+        IRQ_SOFTWARE1           = 1,
+        IRQ_SOFTWARE2           = 2,
+        IRQ_SOFTWARE3           = 3,
+        IRQ_SOFTWARE4           = 4,
+        IRQ_SOFTWARE5           = 5,
+        IRQ_SOFTWARE6           = 6,
+        IRQ_SOFTWARE7           = 7,
+        IRQ_SOFTWARE8           = 8,
+        IRQ_SOFTWARE9           = 9,
+        IRQ_SOFTWARE10          = 10,
+        IRQ_SOFTWARE11          = 11,
+        IRQ_SOFTWARE12          = 12,
+        IRQ_SOFTWARE13          = 13,
+        IRQ_SOFTWARE14          = 14,
+        IRQ_SOFTWARE15          = 15,
+        IRQ_GIC0                = 16,
+        IRQ_GIC1                = 17,
+        IRQ_GIC2                = 18,
+        IRQ_GIC3                = 19,
+        IRQ_GIC4                = 20,
+        IRQ_GIC5                = 21,
+        IRQ_GIC6                = 22,
+        IRQ_GIC7                = 23,
+        IRQ_GIC8                = 24,
+        IRQ_GIC9                = 25,
+        IRQ_GIC10               = 26,
+        IRQ_GIC11_GLOBAL_TIMER  = 27,
+        IRQ_GIC12               = 28,
+        IRQ_GIC13               = 29,
+        IRQ_GIC14               = 30,
+        IRQ_GIC15               = 31,
+        IRQ_WATCHDOG            = 32,
+        IRQ_SOFTWARE            = 33,
+        IRQ_COMMRX              = 34,
+        IRQ_COMMTX              = 35,
+        IRQ_TIMER0AND1          = 36,
+        IRQ_TIMER2AND3          = 37,
+        IRQ_RTC                 = 42,
+        IRQ_UART0               = 44,
+        IRQ_UART1               = 45,
+        IRQ_UART2               = 46,
+        IRQ_UART3               = 47,
+        IRQ_DMAC                = 56,
+        IRQ_T1_INT0             = 64,
+        IRQ_T1_INT1             = 65,
+        IRQ_T1_INT2             = 66,
+        IRQ_T1_INT3             = 67,
+        IRQ_T1_INT4             = 68,
+        IRQ_T1_INT5             = 69,
+        IRQ_T1_INT6             = 70,
+        IRQ_T1_INT7             = 71,
+        IRQ_T2_INT0             = 72,
+        IRQ_T2_INT1             = 73,
+        IRQ_T2_INT2             = 74,
+        IRQ_T2_INT3             = 75,
+        IRQ_T2_INT4             = 76,
+        IRQ_T2_INT5             = 77,
+        IRQ_T2_INT6             = 78,
+        IRQ_T2_INT7             = 79,
     };
 
     // Interrupts
-    static const unsigned int INTS = 64;
+    static const unsigned int INTS = 96;
     static const unsigned int EXC_INT = 0;
-    static const unsigned int HARD_INT = 16;
-    static const unsigned int SOFT_INT = HARD_INT + IRQS;
     enum {
-        INT_HARD_FAULT  = ARMv7_M::EXC_HARD,
-        INT_TIMER       = ARMv7_M::EXC_SYSTICK,
-        INT_FIRST_HARD  = HARD_INT,
-        INT_USER_TIMER0 = HARD_INT + IRQ_GPT0A,
-        INT_USER_TIMER1 = HARD_INT + IRQ_GPT1A,
-        INT_USER_TIMER2 = HARD_INT + IRQ_GPT2A,
-        INT_USER_TIMER3 = HARD_INT + IRQ_GPT3A,
-        INT_MACTIMER    = HARD_INT + IRQ_MACTIMER,
-        INT_GPIOA       = HARD_INT + IRQ_GPIOA,
-        INT_GPIOB       = HARD_INT + IRQ_GPIOB,
-        INT_GPIOC       = HARD_INT + IRQ_GPIOC,
-        INT_GPIOD       = HARD_INT + IRQ_GPIOD,
-        INT_NIC0_RX     = HARD_INT + IRQ_RFTXRX,
-        INT_NIC0_TX     = HARD_INT + IRQ_RFTXRX,
-        INT_NIC0_ERR    = HARD_INT + IRQ_RFERR,
-        INT_NIC0_TIMER  = HARD_INT + IRQ_MACTIMER,
-        INT_USB0        = HARD_INT + IRQ_USB,
-        INT_LAST_HARD   = HARD_INT + IRQS,
-        INT_RESCHEDULER = SOFT_INT
+        INT_TIMER = IRQ_GIC11_GLOBAL_TIMER,
+        INT_USER_TIMER0  = IRQ_TIMER0AND1,
+        INT_USER_TIMER1  = IRQ_TIMER0AND1,
+        INT_USER_TIMER2  = IRQ_TIMER2AND3,
+        INT_USER_TIMER3  = IRQ_TIMER2AND3,
+        INT_RESCHEDULER  = IRQ_SOFTWARE0,
     };
 
 public:
     GIC() {}
 
-    static int irq2int(int i) { return i + HARD_INT; }
-    static int int2irq(int i) { return i - HARD_INT; }
+    static int irq2int(int i) { return i; }
+    static int int2irq(int i) { return i; }
 
     static void enable() {
-        db<IC>(TRC) << "IC::enable()" << endl;
-        scs(IRQ_ENABLE0) = ~0;
-        if(IRQS > 32) scs(IRQ_ENABLE1) = ~0;
-        if(IRQS > 64) scs(IRQ_ENABLE2) = ~0;
+        int_dist(GIC_DIST_SETENABLE0) = ~0;
+        int_dist(GIC_DIST_SETENABLE1) = ~0;
+        int_dist(GIC_DIST_SETENABLE2) = ~0;
     }
 
     static void enable(const Interrupt_Id & id) {
-        if(id < HARD_INT)
-            return;
-        IRQ i = int2irq(id);
-        db<IC>(TRC) << "IC::enable(irq=" << i << ")" << endl;
-        assert(i < IRQS);
-        if(i < 32) scs(IRQ_ENABLE0) = 1 << i;
-        else if((IRQS > 32) && (i < 64)) scs(IRQ_ENABLE1) = 1 << (i - 32);
-        else if(IRQS > 64) scs(IRQ_ENABLE2) = 1 << (i - 64);
+        int_dist(GIC_DIST_SETENABLE0 + (id / 32) * 4) = 1 << (id % 32);
     }
 
     static void disable() {
-        db<IC>(TRC) << "IC::disable()" << endl;
-        scs(IRQ_DISABLE0) = ~0;
-        if(IRQS > 32) scs(IRQ_DISABLE1) = ~0;
-        if(IRQS > 64) scs(IRQ_DISABLE2) = ~0;
+        int_dist(GIC_DIST_CLEARENABLE0) = ~0;
+        int_dist(GIC_DIST_CLEARENABLE1) = ~0;
+        int_dist(GIC_DIST_CLEARENABLE2) = ~0;
     }
 
     static void disable(const Interrupt_Id & id) {
-        if(id < HARD_INT)
-            return;
-        IRQ i = int2irq(id);
-        db<IC>(TRC) << "IC::disable(irq=" << i << ")" << endl;
-        assert(i < IRQS);
-        if(i < 32) scs(IRQ_DISABLE0) = 1 << i;
-        else if((IRQS > 32) && (i < 64)) scs(IRQ_DISABLE1) = 1 << (i - 32);
-        else if(IRQS > 64) scs(IRQ_DISABLE2) = 1 << (i - 64);
-        unpend(i);
+        int_dist(GIC_DIST_CLEARENABLE0 + (id / 32) * 4) = 1 << (id % 32);
     }
 
     // Only works in handler mode (inside IC::entry())
     static Interrupt_Id int_id() { return CPU::flags() & 0x3f; }
 
-    static void init(void) {};
-
-private:
-    static void unpend() {
-        db<IC>(TRC) << "IC::unpend()" << endl;
-        scs(IRQ_UNPEND0) = ~0;
-        scs(IRQ_UNPEND1) = ~0;
-        scs(IRQ_UNPEND2) = ~0;
-    }
-
-    static void unpend(const IRQ & i) {
-        db<IC>(TRC) << "IC::unpend(irq=" << i << ")" << endl;
-        assert(i < IRQS);
-        if(i < 32) scs(IRQ_UNPEND0) = 1 << i;
-        else if((IRQS > 32) && (i < 64)) scs(IRQ_UNPEND1) = 1 << (i - 32);
-        else if(IRQS > 64) scs(IRQ_UNPEND2) = 1 << (i - 64);
-    }
+    static void init() {
+        // Set interrup priority mask
+        gic(GIC_PRIORITY_CONTROL) = 0xFF;
+        
+        // Enable CPU interface control register to signal interrupts
+        gic(GIC_CPU_CONTROL) = 1;
+    
+        // Enable distributor control register to send interrupts to CPUs
+        int_dist(GIC_DIST_CONTROL_REGISTER) = 1;
+    };
 };
-
 
 class IC: private GIC
 {
@@ -161,15 +146,6 @@ public:
     using Engine::INT_USER_TIMER1;
     using Engine::INT_USER_TIMER2;
     using Engine::INT_USER_TIMER3;
-    using Engine::INT_GPIOA;
-    using Engine::INT_GPIOB;
-    using Engine::INT_GPIOC;
-    using Engine::INT_GPIOD;
-    using Engine::INT_USB0;
-    using Engine::INT_NIC0_RX;
-    using Engine::INT_NIC0_TX;
-    using Engine::INT_NIC0_ERR;
-    using Engine::INT_NIC0_TIMER;
     using Engine::INT_RESCHEDULER;
 
 public:
@@ -218,7 +194,6 @@ public:
     void data_abort();
     void reserved();
     void fiq();
-    void reset();
 
 private:
     static void dispatch(unsigned int i);
@@ -241,4 +216,3 @@ private:
 __END_SYS
 
 #endif
-

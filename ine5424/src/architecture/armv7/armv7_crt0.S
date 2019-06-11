@@ -24,8 +24,6 @@ _start:
         cmp     r1, r2
         blt     .L1
 
-        //TODO: se nao der certo, botar seminarios aqui
-
         // Call _init
         bl      _init
 

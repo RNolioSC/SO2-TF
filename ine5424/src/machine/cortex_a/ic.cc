@@ -58,7 +58,7 @@ void IC::entry()
         "ldmfd sp!, {r0-r3, r12, lr, pc}^           \n" : : "i"(dispatch));
 }
 
-void IC::reset() {}
+//void IC::reset() {}
 
 void IC::int_not(const Interrupt_Id & i)
 {

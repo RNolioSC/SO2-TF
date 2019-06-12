@@ -37,7 +37,7 @@ struct Traits
     static const bool enabled = true;
     static const bool debugged = true;
     static const bool emulated = true;
-    static const bool hysterically_debugged = false;
+    static const bool hysterically_debugged = true;
 
     typedef LIST<> DEVICES;
     typedef TLIST<> ASPECTS;
@@ -59,8 +59,8 @@ template<> struct Traits<Debug>: public Traits<void>
 {
     static const bool error   = true;
     static const bool warning = true;
-    static const bool info    = false;
-    static const bool trace   = false;
+    static const bool info    = true;
+    static const bool trace   = true;
 };
 
 template<> struct Traits<Lists>: public Traits<void>

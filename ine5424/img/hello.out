@@ -1,2 +1,127 @@
-QEMU: Terminated
-
+Init_System()
+Initializing the CPU: 
+CPU::init()
+MMU::init()
+MMU::init::dat.b=0x0003133c,dat.e=0x0003133c,bss.b=0x0003133c,bss.e=0x0003158c
+MMU::free(addr=0x0003158c,n=4294748788)
+Grouping_List::insert_merging(e=0x0003158c)
+List::insert_tail(e=0x0003158c) => {p=0x00000000,o=0x0003158c,n=0x00000000}
+List[0x00031540]::head=0x00000000 => {p=0xffffffff,o=0xffffffff,n=0xffffffff}
+List[0x00031540]::tail=0x00000000 => {p=0xffffffff,o=0xffffffff,n=0xffffffff}
+List::insert_first(e=0x0003158c) => {p=0x00000000,o=0x0003158c,n=0x00000000}
+List[0x00031540]::head=0x00000000 => {p=0xffffffff,o=0xffffffff,n=0xffffffff}
+List[0x00031540]::tail=0x00000000 => {p=0xffffffff,o=0xffffffff,n=0xffffffff}
+List[0x00031540]::head=0x0003158c => {p=0x00000000,o=0x0003158c,n=0x00000000}
+List[0x00031540]::tail=0x0003158c => {p=0x00000000,o=0x0003158c,n=0x00000000}
+List[0x00031540]::head=0x0003158c => {p=0x00000000,o=0x0003158c,n=0x00000000}
+List[0x00031540]::tail=0x0003158c => {p=0x00000000,o=0x0003158c,n=0x00000000}
+TSC::init()
+done!
+Initializing system's heap: 
+Segment(bytes=540672,color=0,flags=0x00000003) [Chunk::_pt=0x00000000] => 0x0003
+1568
+Address_Space(pd=0x00000000) [Directory::pd=0x00000000] => 0x07efffbc
+Address_Space::attach(this=0x07efffbc,seg=0x00031568,addr=0x00010000) => 0x00000
+000
+Heap(addr=0x00000000,bytes=3) => 0x00031574
+Heap::free(this=0x00031574,ptr=0x00000000,bytes=3)
+~Address_Space(this=0x07efffbc) [Directory::pd=0x00000000]
+done!
+Initializing the machine: 
+Machine::init()
+inicializando a realview
+IC::init()
+IC::disable()
+Timer::init()
+IC::int_vector(int=27,h=0x0002d50c)
+IC::enable(int=27)
+done!
+Initializing system abstractions: 
+Alarm::init()
+Heap::alloc(this=0x00031574,bytes=20Grouping_List::search_decrementing(s=28)
+List[0x00031574]::head=0x00000000 => {p=0xffffffff,o=0xffffffff,n=0xffffffff}
+List[0x00031574]::tail=0x00000000 => {p=0xffffffff,o=0xffffffff,n=0xffffffff}
+Heap::alloc(this=0x00031574): out of memory!
+PANIC!
+Machine::reboot()
+Timer(f=1000,h=0x00023eb8,ch=1) => {count=1}
+Thread::init()
+Heap::alloc(this=0x00031574,bytes=36Grouping_List::search_decrementing(s=44)
+List[0x00031574]::head=0x00000000 => {p=0xffffffff,o=0xffffffff,n=0xffffffff}
+List[0x00031574]::tail=0x00000000 => {p=0xffffffff,o=0xffffffff,n=0xffffffff}
+Heap::alloc(this=0x00031574): out of memory!
+PANIC!
+Machine::reboot()
+Scheduler[chosen=0x00000001]::insert(0x00000000)
+Scheduling_List::insert(e=0x00000014) => {p=0x00000000,o=0x00000000,n=0x00000000
+}
+Heap::alloc(this=0x00031574,bytes=16384Grouping_List::search_decrementing(s=1639
+2)
+List[0x00031574]::head=0x00000000 => {p=0xffffffff,o=0xffffffff,n=0xffffffff}
+List[0x00031574]::tail=0x00000000 => {p=0xffffffff,o=0xffffffff,n=0xffffffff}
+Heap::alloc(this=0x00031574): out of memory!
+PANIC!
+Machine::reboot()
+Thread(entry=0x000102f8,state=0,priority=0,stack={b=0x00000000,s=16384},context=
+{b=0x00003fc0,{r0=0,r1=0,r2=0,r3=0,r4=0,r5=0,r6=0,r7=0,r8=0,r9=0,r10=0,r11=0,r12
+=0,sp=0x00003fc0,lr=0x308b4,pc=0x102f8,psr=13}}) => 0x00000000
+Heap::alloc(this=0x00031574,bytes=36Grouping_List::search_decrementing(s=44)
+List[0x00031574]::head=0x00000000 => {p=0xffffffff,o=0xffffffff,n=0xffffffff}
+List[0x00031574]::tail=0x00000000 => {p=0xffffffff,o=0xffffffff,n=0xffffffff}
+Heap::alloc(this=0x00031574): out of memory!
+PANIC!
+Machine::reboot()
+Scheduler[chosen=0x00000000]::insert(0x00000000)
+Scheduling_List::insert(e=0x00000014) => {p=0x00000000,o=0x00000000,n=0x00000000
+}
+Ordered_List::insert(e=0x00000014) => {p=0x00000000,o=0x00000000,n=0x00000000}
+List::insert_first(e=0x00000014) => {p=0x00000000,o=0x00000000,n=0x00000000}
+List[0x00031394]::head=0x00000000 => {p=0xffffffff,o=0xffffffff,n=0xffffffff}
+List[0x00031394]::tail=0x00000000 => {p=0xffffffff,o=0xffffffff,n=0xffffffff}
+List[0x00031394]::head=0x00000014 => {p=0x00000000,o=0x00000000,n=0x00000000}
+List[0x00031394]::tail=0x00000014 => {p=0x00000000,o=0x00000000,n=0x00000000}
+Heap::alloc(this=0x00031574,bytes=16384Grouping_List::search_decrementing(s=1639
+2)
+List[0x00031574]::head=0x00000000 => {p=0xffffffff,o=0xffffffff,n=0xffffffff}
+List[0x00031574]::tail=0x00000000 => {p=0xffffffff,o=0xffffffff,n=0xffffffff}
+Heap::alloc(this=0x00031574): out of memory!
+PANIC!
+Machine::reboot()
+Thread(entry=0x00025cb0,state=1,priority=2147483647,stack={b=0x00000000,s=16384}
+,context={b=0x00003fc0,{r0=0,r1=0,r2=0,r3=0,r4=0,r5=0,r6=0,r7=0,r8=0,r9=0,r10=0,
+r11=0,r12=0,sp=0x00003fc0,lr=0x308b4,pc=0x25cb0,psr=13}}) => 0x00000000
+done!
+Randomizing the Random Numbers Generator's seed: 
+done!
+Init_Application()
+Initializing application's heap: 
+Heap(addr=0x00035371,bytes=16777216) => 0x00031350
+Heap::free(this=0x00031350,ptr=0x00035371,bytes=16777216)
+Grouping_List::insert_merging(e=0x00035371)
+List::insert_tail(e=0x00035371) => {p=0x00000000,o=0x00035371,n=0x00000000}
+List[0x00031350]::head=0x00000000 => {p=0xffffffff,o=0xffffffff,n=0xffffffff}
+List[0x00031350]::tail=0x00000000 => {p=0xffffffff,o=0xffffffff,n=0xffffffff}
+List::insert_first(e=0x00035371) => {p=0x00000000,o=0x00035371,n=0x00000000}
+List[0x00031350]::head=0x00000000 => {p=0xffffffff,o=0xffffffff,n=0xffffffff}
+List[0x00031350]::tail=0x00000000 => {p=0xffffffff,o=0xffffffff,n=0xffffffff}
+List[0x00031350]::head=0x00035371 => {p=0x00000000,o=0x00035371,n=0x00000000}
+List[0x00031350]::tail=0x00035371 => {p=0x00000000,o=0x00035371,n=0x00000000}
+List[0x00031350]::head=0x00035371 => {p=0x00000000,o=0x00035371,n=0x00000000}
+List[0x00031350]::tail=0x00035371 => {p=0x00000000,o=0x00035371,n=0x00000000}
+done!
+Init_First()
+INIT ends here!
+Dispatching the first thread: 0x00000000
+Heap::free(this=0x00031574,ptr=0xffffc000,bytes=16384)
+Grouping_List::insert_merging(e=0xffffc000)
+List::insert_tail(e=0xffffc000) => {p=0x00000000,o=0xffffc000,n=0x00000000}
+List[0x00031574]::head=0x00000000 => {p=0xffffffff,o=0xffffffff,n=0xffffffff}
+List[0x00031574]::tail=0x00000000 => {p=0xffffffff,o=0xffffffff,n=0xffffffff}
+List::insert_first(e=0xffffc000) => {p=0x00000000,o=0xffffc000,n=0x00000000}
+List[0x00031574]::head=0x00000000 => {p=0xffffffff,o=0xffffffff,n=0xffffffff}
+List[0x00031574]::tail=0x00000000 => {p=0xffffffff,o=0xffffffff,n=0xffffffff}
+List[0x00031574]::head=0xffffc000 => {p=0x00000000,o=0xffffc000,n=0x00000000}
+List[0x00031574]::tail=0xffffc000 => {p=0x00000000,o=0xffffc000,n=0x00000000}
+List[0x00031574]::head=0xffffc000 => {p=0x00000000,o=0xffffc000,n=0x00000000}
+List[0x00031574]::tail=0xffffc000 => {p=0x00000000,o=0xffffc000,n=0x00000000}
+Thread::idle(this=0x00000000)

@@ -45,7 +45,7 @@ public:
         IRQ_GIC10               = 26,
         IRQ_GIC11_GLOBAL_TIMER  = 27,
         IRQ_GIC12               = 28,
-        IRQ_GIC13               = 29,
+        IRQ_GIC13               = 29, //private timer
         IRQ_GIC14               = 30,
         IRQ_GIC15               = 31,
         IRQ_WATCHDOG            = 32,
@@ -82,8 +82,8 @@ public:
     static const unsigned int INTS = 96;
     static const unsigned int EXC_INT = 0;
     enum {
-        INT_TIMER = IRQ_GIC11_GLOBAL_TIMER,
-        INT_USER_TIMER0  = IRQ_TIMER0AND1,
+        INT_TIMER = IRQ_GIC11_GLOBAL_TIMER, //private timer
+        INT_USER_TIMER0  = IRQ_TIMER0AND1, //global
         INT_USER_TIMER1  = IRQ_TIMER0AND1,
         INT_USER_TIMER2  = IRQ_TIMER2AND3,
         INT_USER_TIMER3  = IRQ_TIMER2AND3,
@@ -211,8 +211,8 @@ public:
     void fiq();
 
 private:
-    static void dispatch(unsigned int i);
-    static void eoi(unsigned int i);
+    static void dispatch(unsigned int i); //depois aq
+    static void eoi(unsigned int i); //primeiro aqui
 
     // Logical handlers
     static void int_not(const Interrupt_Id & i);

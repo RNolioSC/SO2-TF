@@ -14,33 +14,15 @@ void _vector_table()
         b   _prefetch_abort                                                                                     \t\n\
         b   _data_abort                                                                                         \t\n\
         nop                           // Reserved                                                               \t\n\
-        b   _irq                                                                                                \t\n\
+        b   _int_entry  //verificar                                                                             \t\n\
         b   _fiq                                                                                                \t\n\
                                                                                                                 \t\n\
-    _irq:                                                                                                       \t\n\
-        SUB     lr, lr, #4          // Pre-adjust lr                                                            \t\n\
-        SRSFD   r13!, #0x12          // Save lr and SPRS to IRQ mode stack                                       \t\n\
-        PUSH    {r0-r4, r12}        // Sace APCS corruptable registers to IRQ mode stack (and maintain 8 byte alignment) \t\n\
-                                                                                                                \t\n\
-        // Read Acknowledge of the interrupt                                                                    \t\n\
-        MRC     p15, 4, r0, c15, c0, 0  // Read periph base address                                             \t\n\
-        LDR     r0, [r0, #0x010C]       // Read the Interrupt Acknowledge Register  (ICCIAR)                    \t\n\
-        MOV     r4, r0                                                                                          \t\n\
-                                                                                                                \t\n\
-        // This example only uses (and enables) one.  At this point                                             \t\n\
-        // you would normally check the ID, and clear the source.                                               \t\n\
-                                                                                                                \t\n\
-        // Write end of interrupt reg                                                                            \t\n\
-        MOV     r0, r4                                                                                          \t\n\
-        MOV     r1, r0                  // Back up passed in ID value                                           \t\n\
-        MRC     p15, 4, r0, c15, c0, 0  // Read periph base address                                             \t\n\
-        STR     r1, [r0, #0x0110]       // Write ID to the End of Interrupt register (ICCEOIR)                  \t\n\
-                                                                                                                \t\n\
-        POP     {r0-r4, r12}        // Restore stacked APCS registers                                           \t\n\
-        MOV     r2, #0x01           // Set r2 so CPU leaves holding pen                                         \t\n\
-        RFEFD   r13!                 // Return from exception                                                    \t\n\
-                                                                                                                \t\n\
     _reset:                                                                                                     \t\n\
+                                                                                                                \t\n\
+        //https://balau82.wordpress.com/2010/02/28/hello-world-for-bare-metal-arm-using-qemu/                   \t\n\
+                                                                                                                \t\n\
+        //set VBAR vector table address                                                                         \t\n\
+        //Maybe this vector table is not called                                                                 \t\n\
                                                                                                                 \t\n\
         //Based on moodle example:                                                                              \t\n\
                                                                                                                 \t\n\
@@ -102,76 +84,60 @@ void _vector_table()
         MOV     r0, #0x0                                                                                        \t\n\
         MCR     p15, 0, r0, c8, c7, 0     // TLBIALL - Invalidate entire Unifed TLB                             \t\n\
                                                                                                                 \t\n\
-        //TODO: page tables for each CPU                                                                        \t\n\
-                                                                                                                \t\n\
-        //STANDARD ENTRIES                                                                                      \t\n\
-        //Entry for VA 0x0                                                                                      \t\n\
-        //This region must be coherent                                                                          \t\n\
-        LDR     r1, =0x0                  // Physical address                                                   \t\n\
-        LDR     r2, =0x00014c06           // Descriptor template                                                \t\n\
-        ORR     r1, r1, r2                // Combine address and template                                       \t\n\
-        STR     r1, [r0]                                                                                        \t\n\
-                                                                                                                \t\n\
-        // Entry for VA 0x0010,0000                                                                             \t\n\
-        // Each CPU stores private data in this address range                                                   \t\n\
-        // Using the MMU to map to different PA on each CPU.                                                    \t\n\
-                                                                                                                \t\n\
-        // CPU 0 - PA Base                                                                                      \t\n\
-        // CPI 1 - PA Base + 1MB                                                                                \t\n\
-        // CPU 2 - PA Base + 2MB                                                                                \t\n\
-        // CPU 3 - PA Base + 3MB                                                                                \t\n\
-                                                                                                                \t\n\
-        MRC     p15, 0, r1, c0, c0, 5     // Re-read Multiprocessor Affinity Register                           \t\n\
-        AND     r1, r1, #0x03             // Mask off, leaving the CPU ID field                                 \t\n\
-        MOV     r1, r1, LSL #20           // Convert core ID into a MB offset                                   \t\n\
-                                                                                                                \t\n\
-        LDR     r3, =0x00100000           // Base PA                                                            \t\n\
-        ADD     r1, r1, r3                // Add CPU offset to PA                                               \t\n\
-        LDR     r2, =0x00000c1e           // Descriptor template                                                \t\n\
-        ORR     r1, r1, r2                // Combine address and template                                       \t\n\
-        STR     r1, [r0, #4]                                                                                    \t\n\
-                                                                                                                \t\n\
-        // Entry for private address space                                                                       \t\n\
-        // Needs to be marked as Device memory                                                                   \t\n\
-        MRC     p15, 4, r1, c15, c0, 0    // Get base address of private address space                          \t\n\
-        LSR     r1, r1, #20               // Clear bottom 20 bits, to find which 1MB block its in               \t\n\
-        LSL     r2, r1, #2                // Make a copy, and multiply by four.  This gives offset into the page tables     \t\n\
-        LSL     r1, r1, #20               // Put back in address format                                         \t\n\
-                                                                                                                \t\n\
-        LDR     r3, =0x00000c06           // Descriptor template                                                \t\n\
-        ORR     r1, r1, r3                // Combine address and template                                       \t\n\
-        STR     r1, [r0, r2]                                                                                    \t\n\
-                                                                                                                \t\n\
+        //TODO: Page tables                                                                                           \t\n\
+        // Aqui é criada uma L1 translation table na RAM que divide                           \t\n\
+        // todo o espaço de endereçamento de 4GB em seções de 1 MB,                           \t\n\
+        // todas com Full Access e Strongly Ordered                                           \t\n\
+        LDR r0, =0xDE2                  // Atribui-se ao R0 parte do descriptor               \t\n\
+        LDR r1, =0xFA0000               // Atribui-se ao R1 endereço base                     \t\n\
+                                        // da L1 tranlastion table                            \t\n\
+        LDR r3, = 4095                  // R3 se torna o contador para o loop                 \t\n\
+                                                                                              \t\n\
+    write_pte:                      // Label do loop para escrita das                     \t\n\
+                                        // page table entry (PTE) da translation table        \t\n\
+        ORR r2, r0, r3, LSL #20     // Atribui-se ao R2 OR entre o endereço               \t\n\
+                                        // e os bits padrão da PTE                            \t\n\
+        STR r2, [r1, r3, LSL #2]        // Escreve-se a PTE na translation table              \t\n\
+                                        // (endereço de escrita é o ttb_address somado        \t\n\
+                                        // com contador e multiplicado por 4)                 \t\n\
+        SUB r3, r3, #1                  // Decrementa-se contador do loop                     \t\n\
+        CMP r3, #-1                     // Faz-se a comparação para verificar                 \t\n\
+                                        // se loop acabou                                     \t\n\
+        BNE write_pte                   // Caso o loop não tenha acabado,                     \t\n\
+                                        // escreve mais uma pte                               \t\n\
+                                                                                              \t\n\
+        // Faz-se a primeira entrada da translation table                                     \t\n\
+        // cacheable, normal, write-back, write allocate                                      \t\n\
+        BIC r0, r0, #0xC            // Limpa-se CB bits                                       \t\n\
+        ORR r0, r0, #0X4            // Write-back, write allocate                             \t\n\
+        BIC r0, r0, #0x7000         // Limpa-se TEX bits                                      \t\n\
+        ORR r0, r0, #0x5000         // Faz-se TEX write-back e write allocate                 \t\n\
+        ORR r0, r0, #0x10000        // Torna compartilhável                                   \t\n\
+        STR r0, [r1]                // Escreve-se na primeira entrada                         \t\n\
+                                                                                              \t\n\
+        // Faz-se a primeira entrada da translation table                                     \t\n\
+        // cacheable, normal, write-back, write allocate                                      \t\n\
+        BIC r0, r0, #0xC            // Limpa-se CB bits                                       \t\n\
+        ORR r0, r0, #0X4            // Write-back, write allocate                             \t\n\
+        BIC r0, r0, #0x7000         // Limpa-se TEX bits                                      \t\n\
+        ORR r0, r0, #0x5000         // Faz-se TEX write-back e write allocate                 \t\n\
+        ORR r0, r0, #0x10000        // Torna compartilhável                                   \t\n\
+        STR r0, [r1]                // Escreve-se na primeira entrada                         \t\n\
+                                                                                                               \t\n\
         DSB                                                                                                     \t\n\
                                                                                                                 \t\n\
-        //Enable MMU                                                                                            \t\n\
-        MRC     p15, 0, r0, c1, c0, 0     // Read current control reg                                           \t\n\
-        ORR     r0, r0, #0x01             // Set M bit                                                          \t\n\
-        MCR     p15, 0, r0, c1, c0, 0     // Write reg back                                                     \t\n\
+        // Inicializa a MMU                                                                   \t\n\
+        MOV r1,#0x0                                                                           \t\n\
+            MCR p15, 0, r1, c2, c0, 2   // Escrita do Translation Table Base Control Register \t\n\
+        LDR r1, =0xFA0000               // Atribui-se ao R1 endereço base                     \t\n\
+                                        // da L1 tranlastion table                            \t\n\
+        MCR p15, 0, r1, c2, c0, 0       // Escreve-se no reg 1 do coprocessor 15 o que ha     \t\n\
+                                        // em r1 (endereco base da tranlastion table)         \t\n\
                                                                                                                 \t\n\
         //BRANCH PREDICTION INIT                                                                                \t\n\
         MRC     p15, 0, r0, c1, c0, 0     // Read SCTLR                                                         \t\n\
         ORR     r0, r0, #(1 << 11)        // Set the Z bit (bit 11)                                             \t\n\
         MCR     p15, 0,r0, c1, c0, 0      // Write SCTLR                                                        \t\n\
-                                                                                                                \t\n\
-        //Init global timer                                                                                     \t\n\
-        // Get base address of private perpherial space                                                         \t\n\
-        MRC     p15, 4, r2, c15, c0, 0  // Read periph base address                                              \t\n\
-        // Ensure the timer is disabled                                                                         \t\n\
-        LDR     r3, [r2, #0x208]        // Read control reg                                                     \t\n\
-        BIC     r3, r3, #0x01           // Clear enable bit                                                     \t\n\
-        STR     r3, [r2, #0x208]        // Write control reg                                                    \t\n\
-        // Form control reg value                                                                               \t\n\
-        CMP     r0, #0                  // Check whether to enable auto-reload                                  \t\n\
-        MOVNE   r0, #0x00               // No auto-reload                                                       \t\n\
-        MOVEQ   r0, #0x04               // With auto-reload                                                     \t\n\
-        STR     r0, [r2, #0x208]        // Store to control register                                            \t\n\
-        // Store increment value                                                                                \t\n\
-        STREQ   r1, [r2, #0x218]                                                                                \t\n\
-        // Clear timer value                                                                                    \t\n\
-        MOV     r0, #0x0                                                                                        \t\n\
-        STR     r0, [r2, #0x0]                                                                                  \t\n\
-        STR     r0, [r2, #0x4]                                                                                  \t\n\
                                                                                                                 \t\n\
         //SMP INITIALIZATION                                                                                    \t\n\
         MRC     p15, 0, r0, c0, c0, 5     // Read CPU ID register                                               \t\n\

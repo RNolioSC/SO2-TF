@@ -5,8 +5,7 @@
 
 __BEGIN_SYS
 
-//Still the same as LM3S811
-
+//TODO: ver daqui pra trás
 void Timer::init() {
     db<Init, Timer>(TRC) << "Timer::init()" << endl;
 

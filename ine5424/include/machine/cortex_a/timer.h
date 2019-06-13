@@ -155,6 +155,7 @@ private:
     static Hertz count2freq(const Count & c) { return c ? Engine::clock() / c : 0; }
     static Count freq2count(const Hertz & f) { return f ? Engine::clock() / f : 0;}
 
+    //TODO
     static void int_handler(const Interrupt_Id & i);
 
     static void init();
@@ -223,6 +224,7 @@ public:
 
     Microsecond read() { return count2us(Engine::read()); }
 
+    //TODO
     void enable() { Engine::enable(); }
     void disable() { Engine::disable(); }
     void power(const Power_Mode & mode) { power_user_timer(_channel, mode); }

@@ -19,7 +19,7 @@ protected:
     typedef CPU::Log_Addr Log_Addr;
 
 public:
-    static const unsigned int IRQS = 30; //deixado igual
+    static const unsigned int IRQS = 96; //deixado igual
     static const unsigned int TIMERS = 4; //pode ser 8
     static const unsigned int UARTS = 4; 
     static const unsigned int GPIO_PORTS = 3;
@@ -48,6 +48,10 @@ public:
         GIC2_BASE               = 0x1e020000,
         GIC3_BASE               = 0x1e030000,
         PERIPHERAL_BASE         = 0x1f000000,
+
+        //Olhar QEMU
+
+        //TTB = 10c0a
     };
 
     // PERIPHERAL_BASE Offsets

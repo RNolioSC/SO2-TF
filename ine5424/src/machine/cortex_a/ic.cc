@@ -107,6 +107,7 @@ void IC::fiq()
     Machine::panic();
 }
 
+//TODO: depois
 void IC::dispatch(unsigned int id)
 {
     if((id != INT_TIMER) || Traits<IC>::hysterically_debugged)
@@ -115,6 +116,7 @@ void IC::dispatch(unsigned int id)
     _int_vector[id](id);
 }
 
+//TODO: primeiro
 void IC::eoi(unsigned int id)
 {
     if((id != INT_TIMER) || Traits<IC>::hysterically_debugged)

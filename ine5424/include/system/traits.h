@@ -146,7 +146,7 @@ template<> struct Traits<System>: public Traits<void>
 
 template<> struct Traits<Thread>: public Traits<void>
 {
-    typedef Scheduling_Criteria::Priority Criterion;
+    typedef Scheduling_Criteria::RR Criterion;
     static const unsigned int QUANTUM = 10000; // us
     static const bool trace_idle = hysterically_debugged;
 };

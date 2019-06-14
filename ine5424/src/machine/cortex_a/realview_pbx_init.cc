@@ -9,7 +9,7 @@ void _startup_cache();
 __BEGIN_SYS
 
 void Realview_PBX::pre_init() {
-	//db<Init, Machine>(TRC) << "Pre inicializando a realview" << endl;
+	db<Init, Machine>(TRC) << "Pre inicializando a realview" << endl;
 
 	if(Machine::cpu_id() == 0) {
 		//primary CPU
@@ -144,19 +144,19 @@ void Realview_PBX::pre_init() {
         MCR     p15, 0, r0, c1, c0, 1   // Write Aux Ctrl register                                              \t\n\
                                                                                                                 \t\n\
         //HOLDING                                                                                               \t\n\
-        MOV     r2, #0x00                 // Clear r2                                                           \t\n\
-        CPSIE   i                         // Enable interrupts                                                  \t\n\
-    holding_pen:                                                                                                \t\n\
-        CMP     r2, #0x0                  // r2 will be set to 0x1 by IRQ handler on receiving SGI              \t\n\
-        WFIEQ                                                                                                   \t\n\
-        BEQ     holding_pen                                                                                     \t\n\
-        CPSID   i                         // IRQs not used in reset of example, so mask out interrupts          \t\n\
+        //MOV     r2, #0x00                 // Clear r2                                                           \t\n\
+        //CPSIE   i                         // Enable interrupts                                                  \t\n\
+    //holding_pen:                                                                                                \t\n\
+        //CMP     r2, #0x0                  // r2 will be set to 0x1 by IRQ handler on receiving SGI              \t\n\
+        //WFIEQ                                                                                                   \t\n\
+        //BEQ     holding_pen                                                                                     \t\n\
+        //CPSID   i                         // IRQs not used in reset of example, so mask out interrupts          \t\n\
 		");
 	}
 }
 
 void Realview_PBX::init() {
-	//db<Init, Machine>(TRC) << "Inicializando a realview" << endl;
+	db<Init, Machine>(TRC) << "Inicializando a realview" << endl;
 }
 
 __END_SYS

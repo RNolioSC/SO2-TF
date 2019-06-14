@@ -19,28 +19,30 @@ template<> struct Traits<Machine>: public Traits<Machine_Common>
 
     // Physical Memory
     static const unsigned int MEM_BASE    = 0x00000000;
-    static const unsigned int MEM_TOP     = 0xffffffff; // 8 KB (MAX for 32-bit is 0x70000000 / 1792 MB)
-    static const unsigned int BOOT_STACK  = 0x07effffc; // MEM_TOP - sizeof(int)
+    static const unsigned int VECTOR_TABLE= 0x00010000;
     static const unsigned int PAGE_TABLES = 0x07f00000;
+    static const unsigned int MEM_TOP     = 0x07ffffff;
 
+    static const unsigned int BOOT        = 0x00000000;
+    static const unsigned int BOOT_STACK  = 0x07effffc; 
     // Logical Memory Map
     static const unsigned int APP_LOW     = 0x00000000;
     static const unsigned int APP_CODE    = 0x00010000;
     static const unsigned int APP_DATA    = 0x00010000;
-    static const unsigned int APP_HIGH    = 0x7fffffff; 
+    static const unsigned int APP_HIGH    = 0x07ffffff;
 
     static const unsigned int PHY_MEM     = 0x80000000;
     static const unsigned int IO_BASE     = 0xf0000000;
     static const unsigned int IO_TOP      = 0xff400000;
 
-    static const unsigned int SYS         = 0x00000000;
-    static const unsigned int SYS_CODE    = 0x00010000; // Library mode only => APP + SYS
-    static const unsigned int SYS_DATA    = 0x00010000; // Library mode only => APP + SYS
+    static const unsigned int SYS         = IO_TOP;
+    static const unsigned int SYS_CODE    = 0xff700000;
+    static const unsigned int SYS_DATA    = 0xff740000;
 
     // Default Sizes and Quantities
     static const unsigned int STACK_SIZE  = 16 * 1024;
     static const unsigned int HEAP_SIZE   = 16 * 1024 * 1024;
-    static const unsigned int MAX_THREADS = 32;
+    static const unsigned int MAX_THREADS = 16;
 };
 
 template<> struct Traits<IC>: public Traits<Machine_Common>

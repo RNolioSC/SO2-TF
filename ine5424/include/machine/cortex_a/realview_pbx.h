@@ -1,4 +1,4 @@
-// EPOS Realvew_PBX (ARM Cortex-M3) MCU Mediator Declarations
+// EPOS LM3S811 (ARM Cortex-M3) MCU Mediator Declarations
 
 #ifndef __realview_pbx_h
 #define __realview_pbx_h
@@ -19,39 +19,46 @@ protected:
     typedef CPU::Log_Addr Log_Addr;
 
 public:
-    static const unsigned int IRQS = 96; //deixado igual
-    static const unsigned int TIMERS = 4; //pode ser 8
-    static const unsigned int UARTS = 4; 
+    static const unsigned int IRQS = 96;
+    static const unsigned int TIMERS = 4;
+    static const unsigned int UARTS = 4;
     static const unsigned int GPIO_PORTS = 3;
     static const bool supports_gpio_power_up = false;
 
     // Base addresses for memory-mapped I/O devices
     enum {
+        // https://wiki.osdev.org/User:Pancakes/arm_qemu_realview-pb-a
+        // http://infocenter.arm.com/help/topic/com.arm.doc.dui0411d/DUI0411D_realview_platform_baseboard_ug.pdf
+        // http://infocenter.arm.com/help/topic/com.arm.doc.dui0440b/DUI0440B_realview_platform_baseboard_for_cortexa9_ug.pdf
+        // http://infocenter.arm.com/help/topic/com.arm.doc.ddi0407g/DDI0407G_cortex_a9_mpcore_r3p0_trm.pdf
+
         SCR_BASE                = 0x10000000,
         SYSTEM_CONTROLLER_BASE  = 0x10001000,
+
         UART0_BASE              = 0x10009000,
         UART1_BASE              = 0x1000a000,
         UART2_BASE              = 0x1000b000,
         UART3_BASE              = 0x1000c000,
+
         WDT0_BASE               = 0x10010000,
+
         GPIOA_BASE              = 0x10013000,
         GPIOB_BASE              = 0x10014000,
         GPIOC_BASE              = 0x10015000,
+
         IC0_BASE                = 0x1e000000,
         IC1_BASE                = 0x1e001000,
         IC2_BASE                = 0x1e002000,
         IC3_BASE                = 0x1e003000,
+
         TIMER0_BASE             = 0x10011000,
         TIMER1_BASE             = 0x10011020,
         TIMER2_BASE             = 0x10012000,
         TIMER3_BASE             = 0x10012020,
+
         GIC2_BASE               = 0x1e020000,
         GIC3_BASE               = 0x1e030000,
         PERIPHERAL_BASE         = 0x1f000000,
-
-        //Olhar QEMU
-
-        //TTB = 10c0a
     };
 
     // PERIPHERAL_BASE Offsets
@@ -162,20 +169,20 @@ protected:
     Realview_PBX() {}
 
     static void reboot() {
-        //Reg32 val = scs(AIRCR) & (~((-1u / VECTKEY) * VECTKEY));
-        //val |= 0x05fa * VECTKEY | SYSRESREQ;
-        //scs(AIRCR) = val;
+        // Reg32 val = scs(AIRCR) & (~((-1u / VECTKEY) * VECTKEY));
+        // val |= 0x05fa * VECTKEY | SYSRESREQ;
+        // scs(AIRCR) = val;
     }
 
     static void delay(const RTC::Microsecond & time) {
-        //assert(Traits<TSC>::enabled);
-        //unsigned long long ts = static_cast<unsigned long long>(time) * TSC::frequency() / 1000000;
-        //tsc(GPTMTAILR) = ts;
-        //tsc(GPTMTAPR) = ts >> 32;
-        //tsc(GPTMCTL) |= TAEN;
-        //while(!(tsc(GPTMRIS) & TATO_INT));
-        //tsc(GPTMCTL) &= ~TAEN;
-        //tsc(GPTMICR) |= TATO_INT;
+        // assert(Traits<TSC>::enabled);
+        // unsigned long long ts = static_cast<unsigned long long>(time) * TSC::frequency() / 1000000;
+        // tsc(GPTMTAILR) = ts;
+        // tsc(GPTMTAPR) = ts >> 32;
+        // tsc(GPTMCTL) |= TAEN;
+        // while(!(tsc(GPTMRIS) & TATO_INT));
+        // tsc(GPTMCTL) &= ~TAEN;
+        // tsc(GPTMICR) |= TATO_INT;
     }
 
     static const UUID & uuid() { return System::info()->bm.uuid; } // TODO: System_Info is not populated in this machine
@@ -188,109 +195,65 @@ protected:
 
     // Device enabling
     static void enable_uart(unsigned int unit) {
-        //assert(unit < UARTS);
-        //power_uart(unit, FULL);
-        //gpioa(AFSEL) |= 3 << (unit * 2);                // Pins A[1:0] are multiplexed between GPIO and UART 0. Select UART.
-        //gpioa(DEN) |= 3 << (unit * 2);                  // Enable digital I/O on Pins A[1:0]
+        // assert(unit < UARTS);
+        // power_uart(unit, FULL);
+        // gpioa(AFSEL) |= 3 << (unit * 2);                // Pins A[1:0] are multiplexed between GPIO and UART 0. Select UART.
+        // gpioa(DEN) |= 3 << (unit * 2);                  // Enable digital I/O on Pins A[1:0]
     }
-    static void enable_usb(unsigned int unit) {}
 
     // Power Management
     static void power_uart(unsigned int unit, const Power_Mode & mode) {
-        //assert(unit < UARTS);
-        //switch(mode) {
-        //case ENROLL:
-        //	break;
-        //case DISMISS:
-        //	break;
-        //case SAME:
-        //	break;
-        //case FULL:
-        //	break;
-        //case LIGHT:
-        //	break;
-        //case SLEEP:
-        //    scr(RCGC1) |= 1 << unit;                   // Activate UART "unit" clock
-        //    scr(RCGC2) |= 1 << unit;                   // Activate port "unit" clock
-        //    break;
-        //case OFF:
-        //    scr(RCGC1) &= ~(1 << unit);                // Deactivate UART "unit" clock
-        //    scr(RCGC2) &= ~(1 << unit);                // Deactivate port "unit" clock
-        //    break;
-        //}
+        // assert(unit < UARTS);
+        // switch(mode) {
+        // case ENROLL:
+        //  break;
+        // case DISMISS:
+        //  break;
+        // case SAME:
+        //  break;
+        // case FULL:
+        //  break;
+        // case LIGHT:
+        //  break;
+        // case SLEEP:
+        //     scr(RCGC1) |= 1 << unit;                   // Activate UART "unit" clock
+        //     scr(RCGC2) |= 1 << unit;                   // Activate port "unit" clock
+        //     break;
+        // case OFF:
+        //     scr(RCGC1) &= ~(1 << unit);                // Deactivate UART "unit" clock
+        //     scr(RCGC2) &= ~(1 << unit);                // Deactivate port "unit" clock
+        //     break;
+        // }
     }
 
     static void power_user_timer(unsigned int unit, const Power_Mode & mode) {
-        //assert(unit < TIMERS);
-        //switch(mode) {
-        //case ENROLL:
-        //	break;
-        //case DISMISS:
-        //	break;
-        //case SAME:
-        //	break;
-        //case FULL:
-        //	break;
-        //case LIGHT:
-        //	break;
-        //case SLEEP:
-        //    scr(RCGC1) |= 1 << (unit + 16);             // Activate GPTM "unit" clock
-        //    break;
-        //case OFF:
-        //    scr(RCGC1) &= ~(1 << (unit + 16));          // Deactivate GPTM "unit" clock
-        //   break;
-        //}
+        // assert(unit < TIMERS);
+        // switch(mode) {
+        // case ENROLL:
+        //  break;
+        // case DISMISS:
+        //  break;
+        // case SAME:
+        //  break;
+        // case FULL:
+        //  break;
+        // case LIGHT:
+        //  break;
+        // case SLEEP:
+        //     scr(RCGC1) |= 1 << (unit + 16);             // Activate GPTM "unit" clock
+        //     break;
+        // case OFF:
+        //     scr(RCGC1) &= ~(1 << (unit + 16));          // Deactivate GPTM "unit" clock
+        //     break;
+        // }
     }
 
-    static void power_usb(unsigned int unit, const Power_Mode & mode) {}
-
-
-    // GPIO
-    static void gpio_init() {}
-    static void power_gpio(unsigned int unit, const Power_Mode & mode) {
-        //assert(unit < UARTS);
-        //switch(mode) {
-        //case ENROLL:
-        //	break;
-        //case DISMISS:
-        //	break;
-        //case SAME:
-        //	break;
-        //case FULL:
-        //	break;
-        //case LIGHT:
-        //	break;
-        //case SLEEP:
-        //    scr(RCGC2) |= 1 << unit;                   // Activate port "unit" clock
-        //    break;
-        //case OFF:
-        //    scr(RCGC2) &= ~(1 << unit);                // Deactivate port "unit" clock
-        //   break;
-        //}
-    }
-    //void gpio_pull_up(unsigned int port, unsigned int pin) { gpio(port, PUR) &= 1 << pin; }
-    //void gpio_pull_down(unsigned int port, unsigned int pin) { gpio(port, PDR) &= 1 << pin; }
-    //void gpio_floating(unsigned int port, unsigned int pin) { gpio(port, ODR) &= 1 << pin; }
 
 public:
-    //static volatile Reg32 & scr(unsigned int o) { return reinterpret_cast<volatile Reg32 *>(SCR0_BASE)[o / sizeof(Reg32)]; }
-    //static volatile Reg32 & scs(unsigned int o) { return reinterpret_cast<volatile Reg32 *>(IC0_BASE)[o / sizeof(Reg32)]; }
-
-    //static volatile Reg32 & systick(unsigned int o) { return reinterpret_cast<volatile Reg32 *>(TIMER3_BASE)[o / sizeof(Reg32)]; }
-    //static volatile Reg32 & tsc(unsigned int o)     { return reinterpret_cast<volatile Reg32 *>(TIMER1_BASE)[o / sizeof(Reg32)]; }
-    //static volatile Reg32 & timer0(unsigned int o)  { return reinterpret_cast<volatile Reg32 *>(TIMER0_BASE)[o / sizeof(Reg32)]; }
-    //static volatile Reg32 & timer1(unsigned int o)  { return reinterpret_cast<volatile Reg32 *>(TIMER2_BASE)[o / sizeof(Reg32)]; }
-    //static volatile Reg32 & gpioa(unsigned int o)   { return reinterpret_cast<volatile Reg32 *>(GPIOA_BASE)[o / sizeof(Reg32)]; }
-    //static volatile Reg32 & gpiob(unsigned int o)   { return reinterpret_cast<volatile Reg32 *>(GPIOB_BASE)[o / sizeof(Reg32)]; }
-    //static volatile Reg32 & gpioc(unsigned int o)   { return reinterpret_cast<volatile Reg32 *>(GPIOC_BASE)[o / sizeof(Reg32)]; }
-    //static volatile Reg32 & gpiod(unsigned int o)   { return reinterpret_cast<volatile Reg32 *>(GPIOD_BASE)[o / sizeof(Reg32)]; }
-    //static volatile Reg32 & gpioe(unsigned int o)   { return reinterpret_cast<volatile Reg32 *>(GPIOE_BASE)[o / sizeof(Reg32)]; }
-    //static volatile Reg32 & gpio(unsigned int port, unsigned int o) { return reinterpret_cast<volatile Reg32 *>(GPIOA_BASE + 0x1000*(port))[o / sizeof(Reg32)]; }
-
     static volatile Reg32 & int_dist(unsigned int o) { return reinterpret_cast<volatile Reg32 *>(PERIPHERAL_BASE + INT_DIST)[o / sizeof(Reg32)]; }
     static volatile Reg32 & gic(unsigned int o) { return reinterpret_cast<volatile Reg32 *>(PERIPHERAL_BASE + GIC)[o / sizeof(Reg32)]; }
     static volatile Reg32 & global_timer(unsigned int o) { return reinterpret_cast<volatile Reg32 *>(PERIPHERAL_BASE + GLOBAL_TIMER)[o / sizeof(Reg32)]; }
-    static volatile Reg32 & priv_timer(unsigned int o) { return reinterpret_cast<volatile Reg32 *>(PERIPHERAL_BASE + TIMER0_BASE)[o / sizeof(Reg32)]; }
+    static volatile Reg32 & priv_timer(unsigned int o) { return reinterpret_cast<volatile Reg32 *>(PERIPHERAL_BASE + PRIVATE_TIMERS)[o / sizeof(Reg32)]; }
 
 protected:
     static void pre_init();

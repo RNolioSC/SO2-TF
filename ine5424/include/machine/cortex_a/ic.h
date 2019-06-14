@@ -83,7 +83,7 @@ public:
     static const unsigned int EXC_INT = 0;
     enum {
         INT_TIMER = IRQ_GIC13, //private timer
-        INT_USER_TIMER0  = IRQ_GIC11_GLOBAL_TIMER,  //IRQ_TIMER0AND1, //global
+        INT_USER_TIMER0  = IRQ_GIC11_GLOBAL_TIMER,  //global
         INT_USER_TIMER1  = IRQ_TIMER0AND1,
         INT_USER_TIMER2  = IRQ_TIMER2AND3,
         INT_USER_TIMER3  = IRQ_TIMER2AND3,
@@ -95,21 +95,6 @@ public:
 
     static int irq2int(int i) { return i; }
     static int int2irq(int i) { return i; }
-
-    static void send_sgi(unsigned int id, unsigned int target_filter, unsigned int filter_list) {
-        /*AND     r3, r0, #0x0F           ; Mask off unused bits of ID, and move to r3
-        AND     r1, r1, #0x0F           ; Mask off unused bits of target_filter
-        AND     r2, r2, #0x0F           ; Mask off unused bits of filter_list
-
-        ORR     r3, r3, r1, LSL #16     ; Combine ID and target_filter
-        ORR     r3, r3, r2, LSL #24     ; and now the filter list
-
-        ; Get the address of the GIC
-        MRC     p15, 4, r0, c15, c0, 0  ; Read periph base address
-        ADD     r0, r0, #0x1F00         ; Add offset of the sgi_trigger reg
-
-        STR     r3, [r0]                ; Write to the Software Generated Interrupt Register  (ICDSGIR)*/
-    }
 
     static void enable() {
         int_dist(GIC_DIST_SETENABLE0) = ~0;

@@ -5,7 +5,6 @@
 
 __BEGIN_SYS
 
-//TODO: ver daqui pra trás
 void Timer::init() {
     db<Init, Timer>(TRC) << "Timer::init()" << endl;
 

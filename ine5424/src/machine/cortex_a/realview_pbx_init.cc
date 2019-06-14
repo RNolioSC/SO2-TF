@@ -9,6 +9,7 @@ void _startup_cache();
 __BEGIN_SYS
 
 void Realview_PBX::pre_init() {
+	ASM("mcr p15, 0, %0, c12, c0, 0" : : "p"(Traits<Machine>::VECTOR_TABLE));
 	//db<Init, Machine>(TRC) << "Pre inicializando a realview" << endl;
 }
 

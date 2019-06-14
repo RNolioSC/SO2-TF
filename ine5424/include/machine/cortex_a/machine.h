@@ -27,7 +27,11 @@ public:
     static void poweroff();
 
     static unsigned int n_cpus();
-    static unsigned int cpu_id();
+    static unsigned int cpu_id() {
+        int id;
+        ASM("mrc p15, 0, %0, c0, c0, 5" : "=r"(id) : : );
+        return id & 0x3;
+    }
 
     static void smp_barrier();
     static void smp_init(unsigned int);

@@ -9,11 +9,11 @@ void _startup_cache();
 __BEGIN_SYS
 
 void Realview_PBX::pre_init() {
-	db<Init, Machine>(TRC) << "pre Inicializando a realview" << endl;
+	//db<Init, Machine>(TRC) << "Pre inicializando a realview" << endl;
 }
 
 void Realview_PBX::init() {
-	db<Init, Machine>(TRC) << "inicializando a realview" << endl;
+	//db<Init, Machine>(TRC) << "Inicializando a realview" << endl;
 }
 
 __END_SYS

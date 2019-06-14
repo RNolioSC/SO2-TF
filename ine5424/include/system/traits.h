@@ -37,7 +37,7 @@ struct Traits
     static const bool enabled = true;
     static const bool debugged = true;
     static const bool emulated = true;
-    static const bool hysterically_debugged = true;
+    static const bool hysterically_debugged = false;
 
     typedef LIST<> DEVICES;
     typedef TLIST<> ASPECTS;
@@ -49,7 +49,7 @@ template<> struct Traits<Build>: public Traits<void>
     static const unsigned int ARCHITECTURE = ARMv7;
     static const unsigned int MACHINE = Cortex_A;
     static const unsigned int MODEL = Realview_PBX;
-    static const unsigned int CPUS = 1;
+    static const unsigned int CPUS = 4;
     static const unsigned int NODES = 1; // > 1 => NETWORKING
 };
 
@@ -59,8 +59,8 @@ template<> struct Traits<Debug>: public Traits<void>
 {
     static const bool error   = true;
     static const bool warning = true;
-    static const bool info    = true;
-    static const bool trace   = true;
+    static const bool info    = false;
+    static const bool trace   = false;
 };
 
 template<> struct Traits<Lists>: public Traits<void>
@@ -134,7 +134,7 @@ template<> struct Traits<System>: public Traits<void>
     static const unsigned int mode = Traits<Build>::MODE;
     static const bool multithread = (Traits<Application>::MAX_THREADS > 1);
     static const bool multiheap = true;
-    static const bool multicore = false;
+    static const bool multicore = true;
 
     static const unsigned long LIFE_SPAN = 1 * YEAR; // s
 

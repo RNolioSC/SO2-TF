@@ -82,8 +82,8 @@ public:
     static const unsigned int INTS = 96;
     static const unsigned int EXC_INT = 0;
     enum {
-        INT_TIMER = IRQ_GIC11_GLOBAL_TIMER, //private timer
-        INT_USER_TIMER0  = IRQ_TIMER0AND1, //global
+        INT_TIMER = IRQ_GIC13, //private timer
+        INT_USER_TIMER0  = IRQ_GIC11_GLOBAL_TIMER,  //IRQ_TIMER0AND1, //global
         INT_USER_TIMER1  = IRQ_TIMER0AND1,
         INT_USER_TIMER2  = IRQ_TIMER2AND3,
         INT_USER_TIMER3  = IRQ_TIMER2AND3,

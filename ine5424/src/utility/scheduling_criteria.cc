@@ -5,6 +5,8 @@
 
 __BEGIN_SYS
 
+volatile unsigned int Scheduling_Criteria::Variable_Queue::_next_queue;
+
 // The following Scheduling Criteria depend on Alarm, which is not available at scheduler.h
 namespace Scheduling_Criteria {
     FCFS::FCFS(int p): Priority((p == IDLE) ? IDLE : Alarm::_elapsed) {}

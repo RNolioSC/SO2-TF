@@ -28,6 +28,13 @@ void _vector_table()
         //Based on moodle example:                                                                              \t\n\
                                                                                                                 \t\n\
         //Generic initialization for all CPUs                                                                   \t\n\
+                                                                                            \t\n\
+        // Setup stacks                                                                         \t\n\
+        MSR     CPSR_c, #0xD2                                                               \t\n\
+        LDR     sp, =0x001FE000                                                                             \t\n\
+                                                                                                    \t\n\
+        MSR     CPSR_c, #0xDF   // No interrupts                                                \t\n\
+        LDR     sp, =0x001FC000                                                                                  \t\n\
                                                                                                                 \t\n\
         //MMU init                                                                                              \t\n\
         //Invalidate caches                                                                                     \t\n\
@@ -160,7 +167,7 @@ void _vector_table()
         // Aqui é criada uma L1 translation table na RAM que divide                           \t\n\
         // todo o espaço de endereçamento de 4GB em seções de 1 MB,                           \t\n\
         // todas com Full Access e Strongly Ordered                                           \t\n\
-        LDR r0, =0xDE2                  // Atribui-se ao R0 parte do descriptor               \t\n\
+        LDR r0, =0x10C0A                // Atribui-se ao R0 parte do descriptor               \t\n\
         LDR r1, =0xFA0000               // Atribui-se ao R1 endereço base                     \t\n\
                                         // da L1 tranlastion table                            \t\n\
         LDR r3, = 4095                  // R3 se torna o contador para o loop                 \t\n\

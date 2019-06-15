@@ -7,6 +7,7 @@ __BEGIN_SYS
 void Machine::pre_init(System_Info * si)
 {
     db<Init, Machine>(TRC) << "Machine::init()" << endl;
+    db<Init, Machine>(TRC) << "ID: " << Machine::cpu_id() << endl;
 
     Machine_Model::pre_init();
 
@@ -19,8 +20,8 @@ void Machine::init()
 
     Machine_Model::init();
 
-    if(Machine::cpu_id() == 0) {
-        ASM(" \t\n\
+    if(Machine::cpu_id() == 0 && Traits<System>::multicore == true) {
+        /*ASM(" \t\n\
             LDR r0, =0x0 \t\n\
             LDR r1, =0x0F \t\n\
             LDR r2, =0x01 \t\n\
@@ -36,7 +37,7 @@ void Machine::init()
             ADD     r0, r0, #0x1F00         // Add offset of the sgi_trigger reg    \t\n\
                                                                                             \t\n\
             STR     r3, [r0]                // Write to the Software Generated Interrupt Register  (ICDSGIR) \t\n\
-            ");
+            ");*/
     }
 
     //Verificar se é a CPU 0

@@ -175,14 +175,8 @@ protected:
     }
 
     static void delay(const RTC::Microsecond & time) {
-        // assert(Traits<TSC>::enabled);
-        // unsigned long long ts = static_cast<unsigned long long>(time) * TSC::frequency() / 1000000;
-        // tsc(GPTMTAILR) = ts;
-        // tsc(GPTMTAPR) = ts >> 32;
-        // tsc(GPTMCTL) |= TAEN;
-        // while(!(tsc(GPTMRIS) & TATO_INT));
-        // tsc(GPTMCTL) &= ~TAEN;
-        // tsc(GPTMICR) |= TATO_INT;
+        TSC::Time_Stamp end = TSC::time_stamp() + time * (TSC::frequency() / 1000000);
+        while(end > TSC::time_stamp());
     }
 
     static const UUID & uuid() { return System::info()->bm.uuid; } // TODO: System_Info is not populated in this machine

@@ -20,20 +20,43 @@ class Machine: private Machine_Common, private Machine_Model
 public:
     Machine() {}
 
-    static void delay(const RTC::Microsecond & time);
+    static void delay(const RTC::Microsecond & time) {
+        Machine_Model::delay(time);
+    }
     
     static void panic();
     static void reboot();
     static void poweroff();
 
-    static unsigned int n_cpus();
+    static unsigned int n_cpus() {
+        return Traits<Build>::CPUS;
+    }
     static unsigned int cpu_id() {
         int id;
         ASM("mrc p15, 0, %0, c0, c0, 5" : "=r"(id) : : );
         return id & 0x3;
     }
 
-    static void smp_barrier();
+    static const bool smp = Traits<System>::multicore;
+
+    static void smp_barrier() {
+        static volatile unsigned long ready[2];
+        static volatile unsigned long i;
+
+        if(smp) {
+            int j = i;
+
+            CPU::finc(ready[j]);
+
+            if(cpu_id() == 0) {
+                while(ready[j] < n_cpus()); // wait for all CPUs to be ready
+                i = !i;                   // toggle ready
+                ready[j] = 0;             // signalizes waiting CPUs
+            } else {
+                while(ready[j]);          // wait for CPU[0] signal
+            }
+        }
+    }
     static void smp_init(unsigned int);
 
     static const UUID & uuid() { return Machine_Model::uuid(); }

@@ -20,11 +20,12 @@ void _vector_table()
                                                                              \t\n\
     _reset:                                                                  \t\n\
         // Setup stacks                                                                                 \t\n\
-        MSR     CPSR_c, #0xD2                                                                           \t\n\
-        LDR     sp, =0x001FE000                                                                         \t\n\
-                                                                                                        \t\n\
-        MSR     CPSR_c, #0xDF   // No interrupts                                                        \t\n\
-        LDR     sp, =0x001FC000                                                                         \t\n\
+        mrc p15, 0, r2, c0, c0, 5                                                                         \t\n\
+        ands r2, r2, #0x03                                                                                  \t\n\
+        mov r2, r2, LSL #14                                                                                 \t\n\
+        ldr r1, =__boot_stack__                                                                         \t\n\
+        sub r1, r1, r2                                                                              \t\n\
+        mov sp, r1                                                                         \t\n\
                                                                                                         \t\n\
         // MMU, L1$ disable                                                                         \t\n\
         MRC p15, 0, r1, c1, c0, 0   // Read System Control Register (SCTLR)                           \t\n\
@@ -185,6 +186,6 @@ void _vector_table()
         ORR     r0, r0, #(1 << 11)        // Set the Z bit (bit 11)                                             \t\n\
         MCR     p15, 0,r0, c1, c0, 0      // Write SCTLR                                                        \t\n\
                                                                                               \t\n\
-        b _mcu_start                                                                              \t\n\
+        b _start                                                                              \t\n\
         ");
 }

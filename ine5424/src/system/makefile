@@ -4,9 +4,9 @@ include ../../makedefs
 
 OBJS := $(subst .cc,.o,$(shell find *.cc))
 
-all:	install
+all:		install
 
-install: $(MACH)_install_$(MODE)
+install: $(MACH)_install_$(SMOD)
 
 $(MACH)_install_library: $(MACH)_system_library
 		$(INSTALL) $(MACH)_system.o $(LIB)

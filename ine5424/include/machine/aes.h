@@ -17,6 +17,14 @@ __END_SYS
 
 #ifdef __AES_H
 #include __AES_H
+
+__BEGIN_SYS
+
+template<unsigned int KEY_SIZE>
+using AES = _SYS::_AES<KEY_SIZE>;
+
+__END_SYS
+
 #else
 
 #include <utility/aes.h>
@@ -24,7 +32,7 @@ __END_SYS
 __BEGIN_SYS
 
 template<unsigned int KEY_SIZE>
-class AES: private AES_Common, public _UTIL::AES<KEY_SIZE> {};
+using AES = _UTIL::_AES<KEY_SIZE>;
 
 __END_SYS
 

@@ -6,7 +6,7 @@ OBJS := $(subst .cc,.o,$(shell find *.cc))
 
 all:	install
 
-install: $(MACH)_install_$(MODE)
+install: $(MACH)_install_$(SMOD)
 
 $(MACH)_install_library: $(MACH)_init_library
 		$(INSTALL) $(MACH)_init_first.o $(LIB)

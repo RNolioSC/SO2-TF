@@ -13,8 +13,12 @@ __END_SYS
 __BEGIN_API
 
 // Global objects
+__USING_UTIL
 OStream cout;
 OStream cerr;
 
 __END_API
 
+extern "C" {
+    void __pre_main() {}
+}

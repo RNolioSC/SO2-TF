@@ -36,7 +36,7 @@ struct Traits
     // Default traits
     static const bool enabled = true;
     static const bool debugged = true;
-    static const bool emulated = true;
+    static const bool monitored = false;
     static const bool hysterically_debugged = false;
 
     typedef LIST<> DEVICES;
@@ -50,7 +50,8 @@ template<> struct Traits<Build>: public Traits<void>
     static const unsigned int MACHINE = Cortex_M;
     static const unsigned int MODEL = LM3S811;
     static const unsigned int CPUS = 1;
-    static const unsigned int NODES = 1; // > 1 => NETWORKING
+    static const unsigned int NODES = 1; // (> 1 => NETWORKING)
+    static const unsigned int EXPECTED_SIMULATION_TIME = 60; // s (0 => not simulated)
 };
 
 
@@ -101,7 +102,7 @@ template<> struct Traits<Init>: public Traits<void>
 // Mediators
 template<> struct Traits<Serial_Display>: public Traits<void>
 {
-    static const bool enabled = emulated;
+    static const bool enabled = (Traits<Build>::EXPECTED_SIMULATION_TIME != 0);
     static const int ENGINE = UART;
     static const int COLUMNS = 80;
     static const int LINES = 24;
@@ -110,7 +111,7 @@ template<> struct Traits<Serial_Display>: public Traits<void>
 
 template<> struct Traits<Serial_Keyboard>: public Traits<void>
 {
-    static const bool enabled = emulated;
+    static const bool enabled = (Traits<Build>::EXPECTED_SIMULATION_TIME != 0);
 };
 
 __END_SYS
@@ -132,8 +133,10 @@ template<> struct Traits<Application>: public Traits<void>
 template<> struct Traits<System>: public Traits<void>
 {
     static const unsigned int mode = Traits<Build>::MODE;
-    static const bool multithread = (Traits<Application>::MAX_THREADS > 1);
-    static const bool multiheap = false;
+    static const bool multithread = (Traits<Build>::CPUS > 1) || (Traits<Application>::MAX_THREADS > 1);
+    static const bool multitask = (mode != Traits<Build>::LIBRARY);
+    static const bool multicore = (Traits<Build>::CPUS > 1) && multithread;
+    static const bool multiheap = multitask || Traits<Scratchpad>::enabled;
 
     static const unsigned long LIFE_SPAN = 1 * YEAR; // s
 
@@ -145,9 +148,12 @@ template<> struct Traits<System>: public Traits<void>
 
 template<> struct Traits<Thread>: public Traits<void>
 {
+    static const bool enabled = Traits<System>::multithread;
+    static const bool smp = Traits<System>::multicore;
+    static const bool trace_idle = hysterically_debugged;
+
     typedef Scheduling_Criteria::Priority Criterion;
     static const unsigned int QUANTUM = 10000; // us
-    static const bool trace_idle = hysterically_debugged;
 };
 
 template<> struct Traits<Scheduler<Thread>>: public Traits<void>

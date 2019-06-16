@@ -14,11 +14,12 @@ void CPU::init()
     _bus_clock = System::info()->tm.bus_clock;
 
     // Initialize the MMU
-    if(Traits<MMU>::enabled) {
-        if(Machine::cpu_id() == 0)
+    if(Machine::cpu_id() == 0) {
+        if(Traits<MMU>::enabled)
             MMU::init();
-    } else
-        db<Init, MMU>(WRN) << "MMU is disabled!" << endl;
+        else
+            db<Init, MMU>(WRN) << "MMU is disabled!" << endl;
+    }
 
     // Initialize the PMU	
     if(Traits<PMU>::enabled)

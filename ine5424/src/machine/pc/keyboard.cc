@@ -1,5 +1,9 @@
 // EPOS PC PS2_Keyboard Mediator Implementation
 
+#include <system/config.h>
+
+#ifdef __KEYBOARD_H
+
 #include <machine/pc/keyboard.h>
 
 __BEGIN_SYS
@@ -120,3 +124,5 @@ char PS2_Keyboard::map(int code)
  }
 
 __END_SYS
+
+#endif

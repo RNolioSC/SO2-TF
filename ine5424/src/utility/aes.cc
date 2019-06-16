@@ -7,7 +7,7 @@ __BEGIN_UTIL
 // The lookup-tables are marked const so they can be placed in read-only storage instead of RAM
 // The numbers below can be computed dynamically trading ROM for RAM -
 // This can be useful in (embedded) bootloader applications, where ROM is often limited.
-const unsigned char AES<16>::sbox[256] = {
+const unsigned char _AES<16>::sbox[256] = {
 	// 0     1     2     3     4     5     6     7     8     9     a     b     c     d     e     f
 	   0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,
 	   0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0,
@@ -26,7 +26,7 @@ const unsigned char AES<16>::sbox[256] = {
 	   0xe1, 0xf8, 0x98, 0x11, 0x69, 0xd9, 0x8e, 0x94, 0x9b, 0x1e, 0x87, 0xe9, 0xce, 0x55, 0x28, 0xdf,
 	   0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16 };
 
-const unsigned char AES<16>::rsbox[256] = {
+const unsigned char _AES<16>::rsbox[256] = {
 	// 0     1     2     3     4     5     6     7     8     9     a     b     c     d     e     f
            0x52, 0x09, 0x6a, 0xd5, 0x30, 0x36, 0xa5, 0x38, 0xbf, 0x40, 0xa3, 0x9e, 0x81, 0xf3, 0xd7, 0xfb,
 	   0x7c, 0xe3, 0x39, 0x82, 0x9b, 0x2f, 0xff, 0x87, 0x34, 0x8e, 0x43, 0x44, 0xc4, 0xde, 0xe9, 0xcb,
@@ -49,7 +49,7 @@ const unsigned char AES<16>::rsbox[256] = {
 // The round constant word array, rcon[i], contains the values given by
 // x to th e power (i-1) being powers of x (x is denoted as {02}) in the field GF(2^8)
 // Note that i starts at 1, not 0).
-const unsigned char AES<16>::rcon[255] = {
+const unsigned char _AES<16>::rcon[255] = {
 	// 0     1     2     3     4     5     6     7     8     9     a     b     c     d     e     f
            0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36, 0x6c, 0xd8, 0xab, 0x4d, 0x9a,
 	   0x2f, 0x5e, 0xbc, 0x63, 0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3, 0x7d, 0xfa, 0xef, 0xc5, 0x91, 0x39,
@@ -68,7 +68,7 @@ const unsigned char AES<16>::rcon[255] = {
 	   0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3, 0x7d, 0xfa, 0xef, 0xc5, 0x91, 0x39, 0x72, 0xe4, 0xd3, 0xbd,
 	   0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb  };
 
-void AES<16>::ebc_encrypt(const unsigned char * input, const unsigned char * key, unsigned char * output)
+void _AES<16>::ebc_encrypt(const unsigned char * input, const unsigned char * key, unsigned char * output)
 {
     // Copy input to output, and work in-memory on output
     block_copy(output, input);
@@ -81,7 +81,7 @@ void AES<16>::ebc_encrypt(const unsigned char * input, const unsigned char * key
     cipher();
 }
 
-void AES<16>::ebc_decrypt(const unsigned char * input, const unsigned char * key, unsigned char *output)
+void _AES<16>::ebc_decrypt(const unsigned char * input, const unsigned char * key, unsigned char *output)
 {
     // Copy input to output, and work in-memory on output
     block_copy(output, input);
@@ -94,7 +94,7 @@ void AES<16>::ebc_decrypt(const unsigned char * input, const unsigned char * key
     inv_cipher();
 }
 
-void AES<16>::cbc_encrypt_buffer(unsigned char * output, const unsigned char * _input, int length, const unsigned char * key, unsigned char * iv)
+void _AES<16>::cbc_encrypt_buffer(unsigned char * output, const unsigned char * _input, int length, const unsigned char * key, unsigned char * iv)
 {
     unsigned char remainders = length % KEY_SIZE; /* Remaining bytes in the last non-full block */
 
@@ -131,7 +131,7 @@ void AES<16>::cbc_encrypt_buffer(unsigned char * output, const unsigned char * _
     }
 }
 
-void AES<16>::cbc_decrypt_buffer(unsigned char * output, const unsigned char * input, int length, const unsigned char * key, unsigned char * iv)
+void _AES<16>::cbc_decrypt_buffer(unsigned char * output, const unsigned char * input, int length, const unsigned char * key, unsigned char * iv)
 {
     int i;
     unsigned char remainders = length % KEY_SIZE; /* Remaining bytes in the last non-full block */
@@ -168,7 +168,7 @@ void AES<16>::cbc_decrypt_buffer(unsigned char * output, const unsigned char * i
 }
 
 // This function produces Nb(Nr+1) round keys. The round keys are used in each round to decrypt the states.
-void AES<16>::expand_key(void)
+void _AES<16>::expand_key(void)
 {
     unsigned int i, j, k;
     unsigned char tempa[4]; // Used for the column/row operations
@@ -229,7 +229,7 @@ void AES<16>::expand_key(void)
 
 // This function adds the round key to _state.
 // The round key is added to the _state by an XOR function.
-void AES<16>::add_round_key(int round)
+void _AES<16>::add_round_key(int round)
 {
     int i,j;
     for(i=0;i<4;++i) {
@@ -241,7 +241,7 @@ void AES<16>::add_round_key(int round)
 
 // The sub_bytes Function Substitutes the values in the
 // _state matrix with values in an S-box.
-void AES<16>::sub_bytes(void)
+void _AES<16>::sub_bytes(void)
 {
     int i, j;
     for(i = 0; i < 4; ++i) {
@@ -254,7 +254,7 @@ void AES<16>::sub_bytes(void)
 // The shift_rows() function shifts the rows in the _state to the left.
 // Each row is shifted with different offset.
 // Offset = Row number. So the first row is not shifted.
-void AES<16>::shift_rows(void)
+void _AES<16>::shift_rows(void)
 {
     unsigned char temp;
 
@@ -283,7 +283,7 @@ void AES<16>::shift_rows(void)
 }
 
 // mix_columns function mixes the columns of the _state matrix
-void AES<16>::mix_columns(void)
+void _AES<16>::mix_columns(void)
 {
     int i;
     unsigned char Tmp,Tm,t;
@@ -300,7 +300,7 @@ void AES<16>::mix_columns(void)
 // mix_columns function mixes the columns of the _state matrix.
 // The method used to multiply may be difficult to understand for the inexperienced.
 // Please use the references to gain more information.
-void AES<16>::inv_mix_columns(void)
+void _AES<16>::inv_mix_columns(void)
 {
     int i;
     unsigned char a,b,c,d;
@@ -320,7 +320,7 @@ void AES<16>::inv_mix_columns(void)
 
 // The sub_bytes Function Substitutes the values in the
 // _state matrix with values in an S-box.
-void AES<16>::inv_sub_bytes(void)
+void _AES<16>::inv_sub_bytes(void)
 {
     int i,j;
     for(i=0;i<4;++i) {
@@ -330,7 +330,7 @@ void AES<16>::inv_sub_bytes(void)
     }
 }
 
-void AES<16>::inv_shift_rows(void)
+void _AES<16>::inv_shift_rows(void)
 {
     unsigned char temp;
 
@@ -360,7 +360,7 @@ void AES<16>::inv_shift_rows(void)
 
 
 // cipher is the main function that encrypts the PlainText.
-void AES<16>::cipher(void)
+void _AES<16>::cipher(void)
 {
     unsigned char round = 0;
 
@@ -384,7 +384,7 @@ void AES<16>::cipher(void)
     add_round_key(Nr);
 }
 
-void AES<16>::inv_cipher(void)
+void _AES<16>::inv_cipher(void)
 {
     unsigned char round=0;
 

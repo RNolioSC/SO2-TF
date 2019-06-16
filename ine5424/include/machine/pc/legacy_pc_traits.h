@@ -15,7 +15,8 @@ template<> struct Traits<Machine_Common>: public Traits<void>
 
 template<> struct Traits<Machine>: public Traits<Machine_Common>
 {
-    static const unsigned int CPUS = Traits<Build>::CPUS;
+    static const unsigned int NOT_USED          = 0xffffffff;
+    static const unsigned int CPUS              = Traits<Build>::CPUS;
 
     // Boot Image
     static const unsigned int BOOT_LENGTH_MIN   = 512;
@@ -25,31 +26,32 @@ template<> struct Traits<Machine>: public Traits<Machine_Common>
     static const unsigned int RAMDISK_SIZE      = 0x003c0000;
 
     // Physical Memory
-    static const unsigned int MEM_BASE  = 0x00000000;
-    static const unsigned int MEM_TOP   = 0x10000000; // 256 MB (MAX for 32-bit is 0x70000000 / 1792 MB)
+    static const unsigned int MEM_BASE          = 0x00000000;
+    static const unsigned int MEM_TOP           = 0x10000000; // 256 MB (MAX for 32-bit is 0x70000000 / 1792 MB)
+    static const unsigned int BOOT_STACK        = NOT_USED;   // not used (defined by BOOT and by SETUP)
 
     // Logical Memory Map
-    static const unsigned int BOOT      = 0x00007c00;
-    static const unsigned int SETUP     = 0x00100000; // 1 MB
-    static const unsigned int INIT      = 0x00200000; // 2 MB
+    static const unsigned int BOOT              = 0x00007c00;
+    static const unsigned int SETUP             = 0x00100000; // 1 MB
+    static const unsigned int INIT              = 0x00200000; // 2 MB
 
-    static const unsigned int APP_LOW   = 0x00000000;
-    static const unsigned int APP_CODE  = 0x00000000;
-    static const unsigned int APP_DATA  = 0x00400000; // 4 MB
-    static const unsigned int APP_HIGH  = 0x0fffffff; // 256 MB
+    static const unsigned int APP_LOW           = 0x00000000;
+    static const unsigned int APP_CODE          = 0x00000000;
+    static const unsigned int APP_DATA          = 0x00400000; // 4 MB
+    static const unsigned int APP_HIGH          = 0x0fffffff; // 256 MB
 
-    static const unsigned int PHY_MEM   = 0x80000000; // 2 GB
-    static const unsigned int IO_BASE   = 0xf0000000; // 4 GB - 256 MB
-    static const unsigned int IO_TOP    = 0xff400000; // 4 GB - 12 MB
+    static const unsigned int PHY_MEM           = 0x80000000; // 2 GB
+    static const unsigned int IO_BASE           = 0xf0000000; // 4 GB - 256 MB
+    static const unsigned int IO_TOP            = 0xff400000; // 4 GB - 12 MB
 
-    static const unsigned int SYS       = IO_TOP;     // 4 GB - 12 MB
-    static const unsigned int SYS_CODE  = 0xff700000;
-    static const unsigned int SYS_DATA  = 0xff740000;
+    static const unsigned int SYS               = IO_TOP;     // 4 GB - 12 MB
+    static const unsigned int SYS_CODE          = 0xff700000;
+    static const unsigned int SYS_DATA          = 0xff740000;
 
     // Default Sizes and Quantities
-    static const unsigned int STACK_SIZE = 16 * 1024;
-    static const unsigned int HEAP_SIZE = 16 * 1024 * 1024;
-    static const unsigned int MAX_THREADS = 16;
+    static const unsigned int STACK_SIZE        = 16 * 1024;
+    static const unsigned int HEAP_SIZE         = 16 * 1024 * 1024;
+    static const unsigned int MAX_THREADS       = 16;
 };
 
 template<> struct Traits<PCI>: public Traits<Machine_Common>

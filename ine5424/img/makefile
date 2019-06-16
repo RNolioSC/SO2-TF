@@ -3,8 +3,9 @@
 include	../makedefs
 
 SYSTEM		:= $(shell find . -name $(MACH)_\* -and -not -name $(MACH)_boot)
-IMAGES 		:= $(subst .img,,$(shell find . -name \*.img -printf "%f\n"))
-IMAGES 		:= $(IMAGES) $(subst .bin,,$(shell find . -name \*.bin -printf "%f\n"))
+IMAGES 		:= $(subst .img,,$(shell find . -name \*.img -printf "%f\n")) \
+		$(IMAGES) $(subst .bin,,$(shell find . -name \*.bin -printf "%f\n")) \
+		$(IMAGES) $(subst .hex,,$(shell find . -name \*.bin -printf "%f\n"))
 IMAGE		:= $(addsuffix $(MACH_IMGSUFF),$(APPLICATION))
 OUTPUT		:= $(addsuffix .out,$(APPLICATION))
 PEER		:= p-$(APPLICATION)
@@ -28,14 +29,15 @@ endif
 ifneq ($(wildcard $(IMG)/$(MACH)_system),)
 DEBUGGER	:= $(DEBUGGER) -ex "add-symbol-file $(call DBSEC,$(SRC)/system/$(MACH)_system,.text)"
 endif
+PEER_DEBUGGER	:= $(DEBUGGER) -ex "add-symbol-file $(call DBSEC,$(APP)/$(APPLICATION),.text)"
+PEER_DEBUGGER	:= $(subst 1235,1236,$(PEER_DEBUGGER))
 endif
 
 PEER_EMULATOR	:= $(subst 1235,1236,$(EMULATOR))
-PEER_DEBUGGER	:= $(subst 1235,1236,$(DEBUGGER))
 
 NETWORK	        := -netdev socket,id=vlan0,listen=:1234           -object filter-dump,id=dump0,netdev=vlan0,file=$(APPLICATION).pcap   -device pcnet,id=eth0,netdev=vlan0,mac=56:34:12:00:54:08 -device pcnet,id=eth1,mac=00:00:00:00:00:01
 # add the rest of the line to enable a dhcp server -netdev user,id=1,ipv6=off,restrict=on,net=10.0.1.0/24,host=10.0.1.1,dhcpstart=10.0.1.8
-PEER_NETWORK	:= -netdev socket,id=vlan0,connect=127.0.0.1:1234 -object filter-dump,id=dump0,netdev=vlan0,file=p-$(APPLICATION).pcap -device pcnet,id=eth0,netdev=vlan0,mac=56:34:12:00:54:09 -device pcnet,id=eth1,mac=00:00:00:00:00:02
+PEER_NETWORK	:= -netdev socket,id=vlan0,connect=127.0.0.1:1234 -object filter-dump,id=dump0,netdev=vlan0,file=$(PEER).pcap -device pcnet,id=eth0,netdev=vlan0,mac=56:34:12:00:54:09 -device pcnet,id=eth1,mac=00:00:00:00:00:02
 
 ifeq ($(NODES),1)
 
@@ -59,16 +61,18 @@ flash:		strip $(FLASH)
 run:		all run1
 
 run1:
+ifneq ($(STIME),0)
 ifeq ($(NODES),1)
-		$(EMULATOR)$(IMAGE) | $(TEE) $(OUTPUT)
+		timeout --foreground --kill-after=2s --signal=9 $(STIME)s $(EMULATOR)$(IMAGE) | $(TEE) $(OUTPUT)
 else
-		$(TERM) "$(EMULATOR)$(IMAGE) $(NETWORK) | $(TEE) $(OUTPUT) \
+		$(TERM) "timeout --foreground --kill-after=2s --signal=9 $(STIME)s $(EMULATOR)$(IMAGE) $(NETWORK) | $(TEE) $(OUTPUT) \
 		&& $(TCPDUMP) $(APPLICATION).pcap > $(APPLICATION).net \
 		&& read -p 'Press [Enter] key to close ...'" &
 		sleep 2
-		$(TERM) "$(EMULATOR)$(PEER_IMAGE) $(PEER_NETWORK) | $(TEE) $(PEER_OUTPUT) \
-		&& $(TCPDUMP) p-$(APPLICATION).pcap > p-$(APPLICATION).net \
+		$(TERM) "timeout --foreground --kill-after=2s --signal=9 $(STIME)s $(EMULATOR)$(PEER_IMAGE) $(PEER_NETWORK) | $(TEE) $(PEER_OUTPUT) \
+		&& $(TCPDUMP) $(PEER).pcap > $(PEER).net \
 		&& read -p 'Press [Enter] key to close ...'" &
+endif
 endif
 
 debug:		$(IMAGE)
@@ -81,7 +85,7 @@ else
 		&& read -p 'Press [Enter] key to close ...'" &
 		$(DEBUGGER) $(APP)/$(APPLICATION) &
 		sleep 2
-		$(TERM) "$(PEER_EMULATOR)$(PEER_IMAGE) $(PEER_NETWORK) | $(TEE) p-$(OUTPUT) \
+		$(TERM) "$(PEER_EMULATOR)$(PEER_IMAGE) $(PEER_NETWORK) | $(TEE) $(PEER_OUTPUT) \
 		&& $(TCPDUMP) $(PEER).pcap > $(PEER).net \
 		&& read -p 'Press [Enter] key to close ...'" &
 		$(PEER_DEBUGGER) $(APP)/$(PEER) &
@@ -93,7 +97,7 @@ runall:		FORCE
 strip:		$(SYSTEM) $(APPLICATION)
 		@for file in $^; do $(STRIP) "$${file}"; done;
 
-clean:
+clean:		FORCE
 		$(CLEAN) $(SYSTEM) $(APPLICATION) $(IMAGE)
 ifneq ($(NODES),1)
 		$(CLEAN) $(PEER_IMAGE)
@@ -101,8 +105,8 @@ endif
 
 .PHONY: prebuild_$(APPLICATION) posbuild_$(APPLICATION) prerun_$(APPLICATION)
 prerun_$(APPLICATION):
-		@echo "Cooling down for 10s ..."
-		sleep 10
+#		@echo "Cooling down for 10s ..."
+#		sleep 10
 		@echo "Running $(APPLICATION) ..."
 posrun_$(APPLICATION):
 		@echo "done!"

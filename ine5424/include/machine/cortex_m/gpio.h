@@ -19,6 +19,7 @@ private:
     static const bool supports_power_up = Machine_Model::supports_gpio_power_up;
 
 public:
+    typedef _UTIL::Observed Observed;
     typedef _UTIL::Observer Observer;
 
 public:

@@ -9,10 +9,11 @@ _start:
         // an ELF loader that does it for each loaded data segment
         call        _init
 
-        .align        4        // the following label must be aligned for some versions
-        .globl        __epos_app_entry
+        .align      4        // the following label must be aligned for some versions
+        .globl      __epos_app_entry
         .type   __epos_app_entry,@function
 __epos_app_entry:
+        call        __pre_main
         call        main
         push        %eax        // save main's return value to be used by exit()
         call        _fini

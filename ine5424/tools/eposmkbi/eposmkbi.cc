@@ -280,12 +280,12 @@ bool parse_config(FILE * cfg_file, Configuration * cfg)
 
     // EPOS Mode
     if(fgets(line, 256, cfg_file) != line) {
-        fprintf(stderr, "Error: failed to read MODE from configuration file!\n");
+        fprintf(stderr, "Error: failed to read SMOD from configuration file!\n");
         return false;
     }
     token = strtok(line, "=");
-    if(strcmp(token, "MODE") || !(token = strtok(NULL, "\n"))) {
-        fprintf(stderr, "Error: no valid MODE in configuration!\n");
+    if(strcmp(token, "SMOD") || !(token = strtok(NULL, "\n"))) {
+        fprintf(stderr, "Error: no valid SMOD in configuration!\n");
         return false;
     }
     strtolower(cfg->mode, token);

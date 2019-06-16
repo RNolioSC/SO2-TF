@@ -17,7 +17,7 @@ inline void Alarm::lock() { Thread::lock(); }
 inline void Alarm::unlock() { Thread::unlock(); }
 
 // Methods
-Alarm::Alarm(const Microsecond & time, Handler * handler, int times)
+Alarm::Alarm(const Microsecond & time, Handler * handler, unsigned int times)
 : _time(time), _handler(handler), _times(times), _ticks(ticks(time)), _link(this, _ticks)
 {
     lock();

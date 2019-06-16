@@ -26,10 +26,10 @@ private:
 
 public:
     Observed() {
-        db<Observers>(TRC) << "Observed() => " << this << endl;
+        db<Observeds>(TRC) << "Observed() => " << this << endl;
     }
     ~Observed() {
-        db<Observers>(TRC) << "~Observed(this=" << this << ")" << endl;
+        db<Observeds>(TRC) << "~Observed(this=" << this << ")" << endl;
     }
 
     virtual void attach(Observer * o);
@@ -110,7 +110,7 @@ public:
     Conditionally_Observed() {
         db<Observers>(TRC) << "Conditionally_Observed() => " << this << endl;
     }
-    ~Conditionally_Observed() {
+    virtual ~Conditionally_Observed() {
         db<Observers>(TRC) << "~Conditionally_Observed(this=" << this << ")" << endl;
     }
 
@@ -161,7 +161,7 @@ protected:
     }
 
 public:
-    ~Conditional_Observer() {
+    virtual ~Conditional_Observer() {
         db<Observers>(TRC) << "~Conditionally_Observer(this=" << this << ")" << endl;
     }
 

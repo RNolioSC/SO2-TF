@@ -17,6 +17,9 @@ class Machine: private Machine_Common, private Machine_Model
     friend class Init_System;
     friend class First_Object;
 
+private:
+    static const bool smp = Traits<System>::multicore;
+
 public:
     Machine() {}
 
@@ -28,42 +31,21 @@ public:
     static void reboot();
     static void poweroff();
 
-    static unsigned int n_cpus() {
-        return Traits<Build>::CPUS;
-    }
-    static unsigned int cpu_id() {
-        int id;
-        ASM("mrc p15, 0, %0, c0, c0, 5" : "=r"(id) : : );
-        return id & 0x3;
-    }
+    static unsigned int n_cpus() { return smp ? _n_cpus : 1; }
+    static unsigned int cpu_id() { return smp ? Machine_Model::cpu_id() : 0; }
 
-    static const bool smp = Traits<System>::multicore;
-
-    static void smp_barrier() {
-        static volatile unsigned long ready[2];
-        static volatile unsigned long i;
-
-        if(smp) {
-            int j = i;
-
-            CPU::finc(ready[j]);
-
-            if(cpu_id() == 0) {
-                while(ready[j] < n_cpus()); // wait for all CPUs to be ready
-                i = !i;                   // toggle ready
-                ready[j] = 0;             // signalizes waiting CPUs
-            } else {
-                while(ready[j]);          // wait for CPU[0] signal
-            }
-        }
-    }
-    static void smp_init(unsigned int);
+    static void smp_init(unsigned int n_cpus) { _n_cpus = n_cpus; }
+    static void smp_barrier();
 
     static const UUID & uuid() { return Machine_Model::uuid(); }
 
 private:
     static void pre_init(System_Info * si);
     static void init();
+
+private:
+    static volatile unsigned int _n_cpus;
+
 };
 
 __END_SYS

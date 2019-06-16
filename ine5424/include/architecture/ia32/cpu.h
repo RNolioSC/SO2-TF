@@ -23,27 +23,27 @@ public:
     // CPU Flags
     typedef Reg32 Flags;
     enum {
-        FLAG_CF     = 0x00000001,
-        FLAG_PF     = 0x00000004,
-        FLAG_AF     = 0x00000010,
-        FLAG_ZF     = 0x00000040,
-        FLAG_SF     = 0x00000080,
-        FLAG_TF     = 0x00000100,
-        FLAG_IF     = 0x00000200,
-        FLAG_DF     = 0x00000400,
-        FLAG_OF     = 0x00000800,
-        FLAG_IOPL1  = 0x00001000,
-        FLAG_IOPL2  = 0x00002000,
-        FLAG_NT     = 0x00004000,
-        FLAG_RF     = 0x00010000,
-        FLAG_VM     = 0x00020000,
-        FLAG_AC     = 0x00040000,
-        FLAG_VIF    = 0x00080000,
-        FLAG_VIP    = 0x00100000,
-        FLAG_ID     = 0x00200000,
+        FLAG_CF     = 1 <<  0, // Carry
+        FLAG_RES1   = 1 <<  1, // Reserved (always 1)
+        FLAG_PF     = 1 <<  2, // Parity (1->even,0->odd)
+        FLAG_AF     = 1 <<  4, // Auxiliary Carry
+        FLAG_ZF     = 1 <<  6, // Zero
+        FLAG_SF     = 1 <<  7, // Sign (1->negative,0->positive)
+        FLAG_TF     = 1 <<  8, // Trap (single step)
+        FLAG_IF     = 1 <<  9, // Interrupt (1->enabled,0->disabled)
+        FLAG_DF     = 1 << 10, // Direction (1->down,0->up)
+        FLAG_OF     = 1 << 11, // Overflow
+        FLAG_IOPL   = 3 << 12, // I/O PL
+        FLAG_NT     = 1 << 14, // Nested Task
+        FLAG_RF     = 1 << 16, // Resume
+        FLAG_VM     = 1 << 17, // Virtual 8086 mode
+        FLAG_AC     = 1 << 18, // Alignment check
+        FLAG_VIF    = 1 << 19, // Virtual Interrupt
+        FLAG_VIP    = 1 << 20, // Virtual Interrupt Pending
+        FLAG_ID     = 1 << 21, // Supports CPUID
         FLAG_DEFAULTS   = FLAG_IF,
         // Mask to clear flags (by ANDing)
-        FLAG_CLEAR      = ~(FLAG_TF | FLAG_IOPL1 | FLAG_IOPL2 | FLAG_NT | FLAG_RF | FLAG_VM | FLAG_AC)
+        FLAG_CLEAR      = ~(FLAG_TF | FLAG_IOPL | FLAG_NT | FLAG_RF | FLAG_VM | FLAG_AC)
     };
 
     // CPU Exceptions
@@ -74,17 +74,17 @@ public:
 
     // CR0 Flags
     enum {
-        CR0_PE      = 0x00000001,
-        CR0_MP      = 0x00000002,
-        CR0_EM      = 0x00000004,
-        CR0_TS      = 0x00000008,
-        CR0_ET      = 0x00000010,
-        CR0_NE      = 0x00000020,
-        CR0_WP      = 0x00010000,
-        CR0_AM      = 0x00040000,
-        CR0_NW      = 0x20000000,
-        CR0_CD      = 0x40000000,
-        CR0_PG      = 0x80000000,
+        CR0_PE      = 1 <<  0, // Protected Mode Enable (0->real mode, 1->protected mode)
+        CR0_MP      = 1 <<  1, // Monitor co-processor  (1->WAIT/FWAIT with TS flag)
+        CR0_EM      = 1 <<  2, // Emulation             (0->x87 FPU, 1->no x87 FPU)
+        CR0_TS      = 1 <<  3, // Task switched         (delayed x87 context switch)
+        CR0_ET      = 1 <<  4, // Extension type        (for i386, 0->80387, 1-> 80287)
+        CR0_NE      = 1 <<  5, // Numeric error         (1->internal x87 FPU error reporting, 0-> x87 style)
+        CR0_WP      = 1 << 16, // Write protect         (1->CPU can't write to R/O pages in CPL=0)
+        CR0_AM      = 1 << 18, // Alignment mask        (1->alignment check in CPL=3)
+        CR0_NW      = 1 << 29, // Not-write through     (1->globally disable write-through caching)
+        CR0_CD      = 1 << 30, // Cache disable         (1->globally disable the memory cache)
+        CR0_PG      = 1 << 31, // Paging                (1->paging)
         CR0_CLEAR       = (CR0_PE | CR0_EM | CR0_WP),   // Mask to clear flags (by ANDing)
         CR0_SET         = (CR0_PE | CR0_PG)             // Mask to set flags (by ORing)
     };
@@ -113,8 +113,8 @@ public:
         SEG_FLT_DATA    = (SEG_PRE  | SEG_NOSYS | SEG_RW   | SEG_ACC  ),
         SEG_SYS_CODE    = (SEG_PRE  | SEG_NOSYS | SEG_CODE | SEG_RW   | SEG_ACC  ),
         SEG_SYS_DATA    = (SEG_PRE  | SEG_NOSYS | SEG_RW   | SEG_ACC  ),
-        SEG_APP_CODE    = (SEG_PRE  | SEG_NOSYS | SEG_DPL2 | SEG_DPL1 | SEG_CODE | SEG_RW   | SEG_ACC),   // P, DPL=3, S, C, W, A
-        SEG_APP_DATA    = (SEG_PRE  | SEG_NOSYS | SEG_DPL2 | SEG_DPL1 | SEG_RW   | SEG_ACC  ),   // P, DPL=3, S,    W, A
+        SEG_APP_CODE    = (SEG_PRE  | SEG_NOSYS | SEG_DPL2 | SEG_DPL1 | SEG_CODE | SEG_RW   | SEG_ACC), // P, DPL=3, S, C, W, A
+        SEG_APP_DATA    = (SEG_PRE  | SEG_NOSYS | SEG_DPL2 | SEG_DPL1            | SEG_RW   | SEG_ACC), // P, DPL=3, S,    W, A
         SEG_IDT_ENTRY   = (SEG_PRE  | SEG_INT   | SEG_DPL2 | SEG_DPL1 ),
         SEG_TSS0        = (SEG_PRE  | SEG_TSS   | SEG_DPL2 | SEG_DPL1 )
     };

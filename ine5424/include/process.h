@@ -15,14 +15,16 @@ __BEGIN_SYS
 
 class Thread
 {
-    friend class Init_First;
-    friend class Init_System;
-    friend class Scheduler<Thread>;
-    friend class Synchronizer_Common;
-    friend class Alarm;
-    friend class System;
+    friend class Init_First;            // context->load()
+    friend class Init_System;           // for init() on CPU != 0
+    friend class Scheduler<Thread>;     // for link()
+    friend class Synchronizer_Common;   // for lock() and sleep()
+    friend class Alarm;                 // for lock()
+    friend class System;                // for init()
+    friend class IC;                    // for link() for priority ceiling
 
 protected:
+    static const bool smp = Traits<Thread>::smp;
     static const bool preemptive = Traits<Thread>::Criterion::preemptive;
     static const bool reboot = Traits<System>::reboot;
 
@@ -77,8 +79,8 @@ public:
 
     const volatile State & state() const { return _state; }
 
-    const volatile Priority & priority() const { return _link.rank(); }
-    void priority(const Priority & p);
+    const volatile Criterion & priority() const { return _link.rank(); }
+    void priority(const Criterion & p);
 
     int join();
     void pass();
@@ -100,15 +102,27 @@ protected:
 
     static Thread * volatile running() { return _scheduler.chosen(); }
 
-    static void lock() { CPU::int_disable(); }
-    static void unlock() { CPU::int_enable(); }
-    static bool locked() { return CPU::int_disabled(); }
+    static void lock() {
+        CPU::int_disable();
+        if(smp)
+            _lock.acquire();
+    }
+
+    static void unlock() {
+        if(smp)
+            _lock.release();
+        CPU::int_enable();
+    }
+
+    static volatile bool locked() { return (smp) ? _lock.taken() : CPU::int_disabled(); }
 
     static void sleep(Queue * q);
     static void wakeup(Queue * q);
     static void wakeup_all(Queue * q);
 
     static void reschedule();
+    static void reschedule(unsigned int cpu);
+    static void rescheduler(const IC::Interrupt_Id & interrupt);
     static void time_slicer(const IC::Interrupt_Id & interrupt);
 
     static void dispatch(Thread * prev, Thread * next, bool charge = true);
@@ -129,6 +143,7 @@ protected:
     static volatile unsigned int _thread_count;
     static Scheduler_Timer * _timer;
     static Scheduler<Thread> _scheduler;
+    static Spin _lock;
 };
 
 

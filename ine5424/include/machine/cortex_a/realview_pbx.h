@@ -10,7 +10,7 @@
 
 __BEGIN_SYS
 
-class Realview_PBX
+class RealView_PBX
 {
     friend class TSC;
 
@@ -166,7 +166,7 @@ public:
     };
 
 protected:
-    Realview_PBX() {}
+    RealView_PBX() {}
 
     static void reboot() {
         // Reg32 val = scs(AIRCR) & (~((-1u / VECTKEY) * VECTKEY));
@@ -175,6 +175,7 @@ protected:
     }
 
     static void delay(const RTC::Microsecond & time) {
+        assert(Traits<TSC>::enabled);
         TSC::Time_Stamp end = TSC::time_stamp() + time * (TSC::frequency() / 1000000);
         while(end > TSC::time_stamp());
     }
@@ -200,15 +201,15 @@ protected:
         // assert(unit < UARTS);
         // switch(mode) {
         // case ENROLL:
-        //  break;
+        // 	break;
         // case DISMISS:
-        //  break;
+        // 	break;
         // case SAME:
-        //  break;
+        // 	break;
         // case FULL:
-        //  break;
+        // 	break;
         // case LIGHT:
-        //  break;
+        // 	break;
         // case SLEEP:
         //     scr(RCGC1) |= 1 << unit;                   // Activate UART "unit" clock
         //     scr(RCGC2) |= 1 << unit;                   // Activate port "unit" clock
@@ -224,15 +225,15 @@ protected:
         // assert(unit < TIMERS);
         // switch(mode) {
         // case ENROLL:
-        //  break;
+        // 	break;
         // case DISMISS:
-        //  break;
+        // 	break;
         // case SAME:
-        //  break;
+        // 	break;
         // case FULL:
-        //  break;
+        // 	break;
         // case LIGHT:
-        //  break;
+        // 	break;
         // case SLEEP:
         //     scr(RCGC1) |= 1 << (unit + 16);             // Activate GPTM "unit" clock
         //     break;
@@ -254,7 +255,7 @@ protected:
     static void init();
 };
 
-typedef Realview_PBX Machine_Model;
+typedef RealView_PBX Machine_Model;
 
 __END_SYS
 

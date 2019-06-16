@@ -29,7 +29,7 @@ public:
     typedef Time_Base Second;
 
     // Infinite times (for alarms and periodic threads)
-    enum { INFINITE = -1 };
+    enum : unsigned int { INFINITE = -1UL };
 
     // Calendar date and time
     class Date {

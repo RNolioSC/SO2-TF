@@ -9,6 +9,9 @@ void Machine::pre_init(System_Info * si)
     Machine_Model::pre_init();
 
     Display::init();
+
+    if(Traits<System>::multicore)
+        smp_init(si->bm.n_cpus);
 }
 
 void Machine::init()

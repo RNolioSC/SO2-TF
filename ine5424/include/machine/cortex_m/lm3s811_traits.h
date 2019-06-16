@@ -15,7 +15,12 @@ template<> struct Traits<Machine_Common>: public Traits<void>
 
 template<> struct Traits<Machine>: public Traits<Machine_Common>
 {
-    static const unsigned int CPUS = Traits<Build>::CPUS;
+    static const unsigned int NOT_USED    = 0xffffffff;
+    static const unsigned int CPUS        = Traits<Build>::CPUS;
+
+    // Boot Image
+    static const unsigned int BOOT_LENGTH_MIN   = NOT_USED;
+    static const unsigned int BOOT_LENGTH_MAX   = NOT_USED;
 
     // Physical Memory
     static const unsigned int MEM_BASE    = 0x20000000;
@@ -23,6 +28,10 @@ template<> struct Traits<Machine>: public Traits<Machine_Common>
     static const unsigned int BOOT_STACK  = 0x20001ffc; // MEM_TOP - sizeof(int)
 
     // Logical Memory Map
+    static const unsigned int BOOT        = NOT_USED;
+    static const unsigned int SETUP       = NOT_USED;
+    static const unsigned int INIT        = NOT_USED;
+
     static const unsigned int APP_LOW     = 0x20000000;
     static const unsigned int APP_CODE    = 0x00000000;
     static const unsigned int APP_DATA    = 0x20000000;

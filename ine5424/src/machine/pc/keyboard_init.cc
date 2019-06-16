@@ -1,5 +1,9 @@
 // EPOS PC Keyboard Mediator Initialization
 
+#include <system/config.h>
+
+#ifdef __KEYBOARD_H
+
 #include <machine/ic.h>
 #include <machine/keyboard.h>
 
@@ -22,3 +26,5 @@ void PS2_Keyboard::init()
 }
 
 __END_SYS
+
+#endif

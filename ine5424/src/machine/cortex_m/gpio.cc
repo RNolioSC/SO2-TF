@@ -60,8 +60,6 @@ void GPIO::int_enable(const Edge & edge, bool power_up, const Edge & power_up_ed
     gpio(_port, IS) &= ~_pin_bit; // Set interrupt to edge-triggered
 
     switch(edge) {
-    case NONE:
-        break;
     case RISING:
         gpio(_port, IBE) &= ~_pin_bit; // Interrupt on single edge, defined by IEV
         gpio(_port, IEV) |= _pin_bit;
@@ -72,6 +70,8 @@ void GPIO::int_enable(const Edge & edge, bool power_up, const Edge & power_up_ed
         break;
     case BOTH:
         gpio(_port, IBE) |= _pin_bit;
+        break;
+    case NONE:
         break;
     }
 

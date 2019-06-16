@@ -25,6 +25,7 @@ void Machine::reboot()
     Machine_Model::reboot();
 }
 
+//Wait all CPUs to arrive at some point
 void Machine::smp_barrier()
 {
     static volatile unsigned long ready[2];

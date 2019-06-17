@@ -25,7 +25,7 @@ int philosopher(int n, int l, int c)
 
         table.lock();
         Display::position(l, c);
-        cout << "thinking";
+        cout << "thinking -- CPU: " << Machine::cpu_id();
         table.unlock();
 
         Delay thinking(2000000);
@@ -35,7 +35,7 @@ int philosopher(int n, int l, int c)
 
         table.lock();
         Display::position(l, c);
-        cout << " eating ";
+        cout << " eating -- CPU: " << Machine::cpu_id();
         table.unlock();
 
         Delay eating(1000000);

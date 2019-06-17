@@ -134,7 +134,7 @@ void _vector_table()
         // Aqui é criada uma L1 translation table na RAM que divide                           \t\n\
         // todo o espaço de endereçamento de 4GB em seções de 1 MB,                           \t\n\
         // todas com Full Access e Strongly Ordered                                           \t\n\
-        LDR r0, =0x10C0A			        // Atribui-se ao R0 parte do descriptor               \t\n\
+        LDR r0, =0xDE2			        // Atribui-se ao R0 parte do descriptor               \t\n\
         LDR r1, =0xFA0000       	    // Atribui-se ao R1 endereço base                     \t\n\
                                         // da L1 tranlastion table                            \t\n\
         LDR r3, = 4095         		    // R3 se torna o contador para o loop                 \t\n\
@@ -163,8 +163,8 @@ void _vector_table()
                                                                                               \t\n\
         // Inicializa a MMU                                                                   \t\n\
         MOV r1,#0x0                                                                           \t\n\
-            MCR p15, 0, r1, c2, c0, 2   // Escrita do Translation Table Base Control Register \t\n\
-        LDR r1, =0xFA0000   		    // Atribui-se ao R1 endereço base                     \t\n\
+        MCR p15, 0, r1, c2, c0, 2       // Escrita do Translation Table Base Control Register \t\n\
+        LDR r1, =0xFA0000   		        // Atribui-se ao R1 endereço base                     \t\n\
                                         // da L1 tranlastion table                            \t\n\
         MCR p15, 0, r1, c2, c0, 0	    // Escreve-se no reg 1 do coprocessor 15 o que ha     \t\n\
                                         // em r1 (endereco base da tranlastion table)         \t\n\

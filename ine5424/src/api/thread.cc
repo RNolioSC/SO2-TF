@@ -343,8 +343,12 @@ void Thread::rescheduler(const IC::Interrupt_Id & i)
 void Thread::time_slicer(const IC::Interrupt_Id & i)
 {
     lock();
-    if(EQUAL<Criterion, Scheduling_Criteria::FS>::Result) {
-        running()->_link.demote();
+    if(EQUAL<Criterion, Scheduling_Criteria::FB>::Result || EQUAL<Criterion, Scheduling_Criteria::GFB>::Result) {
+        int current_prio = running()->_link.rank();
+        current_prio++;
+        if(current_prio > 0) {
+            running()->_link.rank(current_prio);
+        }
     }
     reschedule();
 }

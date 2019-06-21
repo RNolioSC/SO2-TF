@@ -71,7 +71,7 @@ namespace Scheduling_Criteria
     };
 
     // Feedback Scheduling
-    class FS: public Priority
+    class FB: public Priority
     {
     public:
         enum {
@@ -85,7 +85,7 @@ namespace Scheduling_Criteria
         static const bool preemptive = true;
 
     public:
-        FS(int p = NORMAL): Priority(p) {}
+        FB(int p = NORMAL): Priority(p) {}
     };
 
     // First-Come, First-Served (FIFO)
@@ -102,7 +102,6 @@ namespace Scheduling_Criteria
         template <typename ... Tn>
         FCFS(Tn & ... an) {}
     };
-
 
     // Multicore Algorithms
     class Variable_Queue
@@ -149,6 +148,18 @@ namespace Scheduling_Criteria
 
         static unsigned int current_head() { return Machine::cpu_id(); }
     };
+
+    // Global Round-Robin
+    class GFB: public FB
+    {
+    public:
+        static const unsigned int HEADS = Traits<Build>::CPUS;
+
+    public:
+        GFB(int p = NORMAL): FB(p) {}
+
+        static unsigned int current_head() { return Machine::cpu_id(); }
+    };
 }
 
 
@@ -162,6 +173,10 @@ public Scheduling_Multilist<T> {};
 
 template<typename T>
 class Scheduling_Queue<T, Scheduling_Criteria::GRR>:
+public Multihead_Scheduling_List<T> {};
+
+template<typename T>
+class Scheduling_Queue<T, Scheduling_Criteria::GFB>:
 public Multihead_Scheduling_List<T> {};
 
 // Scheduler

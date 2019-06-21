@@ -87,9 +87,10 @@ namespace Scheduling_Criteria
     class Priority;
     class FCFS;
     class RR;
-    class FS;
+    class FB;
     class CPU_Affinity;
     class GRR;
+    class GFB;
 };
 
 __END_UTIL
